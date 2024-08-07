@@ -4,6 +4,9 @@ public class Main {
     public static void main(String[] args) {
         //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
         // to see how IntelliJ IDEA suggests fixing it.
+        SplashScreen splash = new SplashScreen(5000);
+        splash.displayAndExit();
+        /*
         System.out.print("Hello and welcome!");
 
         for (int i = 1; i <= 5; i++) {
@@ -11,5 +14,6 @@ public class Main {
             // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
             System.out.println("i = " + i);
         }
+         */
     }
 }
