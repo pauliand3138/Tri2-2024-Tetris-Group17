@@ -33,6 +33,15 @@ public class SplashScreen extends JWindow {
         panel.setBorder(BorderFactory.createLineBorder(Color.RED, borderThickness));
         width -= borderThickness * 2;
         height -= borderThickness * 2;
+
+        float imageHeightPct = 0.70F;
+        int imageHeight = (int)(imageHeightPct * height);
+        ImageIcon splashIcon = new ImageIcon("src\\splash.png");
+        Image resizedSplashIcon = splashIcon.getImage().getScaledInstance(width, imageHeight, Image.SCALE_SMOOTH);
+        JLabel image = new JLabel(new ImageIcon(resizedSplashIcon));
+        image.setBounds(borderThickness, borderThickness, width, imageHeight);
+        panel.add(image);
+        /*
         float creatorsHeightPct = 0.10F;
         int creatorsHeight = (int)(creatorsHeightPct * height);
         JTextArea creators = new JTextArea("Creators: Janet Chimwayange, Paul Ian Lim, Karan Singde, Darcy McIntosh and Kacey Boyle.");
@@ -58,5 +67,6 @@ public class SplashScreen extends JWindow {
         JLabel splash = new JLabel(splashImage);
         splash.setBounds(borderThickness, creatorsHeight, width, imageHeight);
         panel.add(splash);
+        */
     }
 }
