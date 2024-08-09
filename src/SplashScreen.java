@@ -33,7 +33,6 @@ public class SplashScreen extends JWindow {
         creators.setLineWrap(true);
         creators.setOpaque(false); // can't see background colour of JTextArea
         creators.setBounds(borderThickness, 0, width, creatorsHeight);
-        creators.setBorder(BorderFactory.createEmptyBorder());
         panel.add(creators);
 
         float descriptionHeightPct = 0.2F;
