@@ -5,8 +5,15 @@ public class SplashScreen extends JWindow {
     public SplashScreen(){
         setup();
     }
-    public void displaySplashAndExit(){
-        displaySplash();
+    public void displaySplash(){
+        setVisible(true);
+        try{
+            int duration = 5000;
+            Thread.sleep(duration);
+        }catch(InterruptedException e){
+            e.printStackTrace();
+        }
+        setVisible(false);
         System.exit(0);
     }
     private void setup(){
@@ -51,15 +58,5 @@ public class SplashScreen extends JWindow {
         JLabel splash = new JLabel(splashImage);
         splash.setBounds(borderThickness, creatorsHeight, width, imageHeight);
         panel.add(splash);
-    }
-    private void displaySplash(){
-        setVisible(true);
-        try{
-            int duration = 5000;
-            Thread.sleep(duration);
-        }catch(InterruptedException e){
-            e.printStackTrace();
-        }
-        setVisible(false);
     }
 }
