@@ -41,6 +41,16 @@ public class SplashScreen extends JWindow {
         JLabel image = new JLabel(new ImageIcon(resizedSplashIcon));
         image.setBounds(borderThickness, borderThickness, width, imageHeight);
         panel.add(image);
+
+        int remaining = height - imageHeight;
+        int creatorsHeight = (int)(remaining * 0.40F);
+        JTextArea creators = new JTextArea("Creators: Janet Chimwayange, Paul Ian Lim, Karan Singde, Darcy McIntosh and Kacey Boyle.");
+        creators.setBounds(borderThickness, 0, width, creatorsHeight);
+        creators.setEditable(false);
+        creators.setLineWrap(true);
+        creators.setOpaque(false);
+        panel.add(creators);
+
         /*
         float creatorsHeightPct = 0.10F;
         int creatorsHeight = (int)(creatorsHeightPct * height);
