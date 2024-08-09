@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class SplashScreen extends JWindow {
@@ -12,7 +13,7 @@ public class SplashScreen extends JWindow {
     }
     private void setup(){
         JPanel panel  = (JPanel) getContentPane();
-        panel.setLayout(new BorderLayout());
+        panel.setLayout(null);
         // Centre panel on splash screen
         int width = 300;
         int height = 500;
@@ -23,11 +24,14 @@ public class SplashScreen extends JWindow {
         setBounds(x, y, width, height);
         // Create and add components to splash screen
         JLabel splashImage = new JLabel(new ImageIcon("src\\splash.png"));
-        panel.add(splashImage, BorderLayout.CENTER);
+        panel.add(splashImage);
         JLabel creators = new JLabel("Creators: Janet Chimwayange, Paul Ian Lim, Karan Singde, Darcy McIntosh, Kacey Boyle.");
-        panel.add(creators, BorderLayout.NORTH);
+        panel.add(creators);
         JLabel description = new JLabel("Description: One of seven tetrimino blocks are chosen. Once ");
-        panel.add(description, BorderLayout.SOUTH);
+        panel.add(description);
+
+        int borderThickness = 5;
+        panel.setBorder(BorderFactory.createLineBorder(Color.RED, borderThickness));
     }
     private void displaySplash(){
         setVisible(true);
