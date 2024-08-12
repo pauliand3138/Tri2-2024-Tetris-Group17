@@ -17,13 +17,11 @@ public class Play extends JPanel {
         int halfWidth = width / 2;
         int x, y;
 
-        // Play Title Label
         JLabel playLabel = new JLabel("Play");
         playLabel.setFont(new Font("Arial", Font.BOLD, 20));
         playLabel.setBounds(halfWidth - 25, 10, 50, 25);
         add(playLabel);
 
-        // Create board
         Board board = new Board();
         int boardWidth = (int) (width * 0.35F);
         int boardHeight = (int) (height * 0.70F);
@@ -32,5 +30,10 @@ public class Play extends JPanel {
         add(board);
         board.setBounds(x, y, boardWidth, boardHeight);
         board.setVisible(true);
+
+        JLabel authorsLabel = new JLabel("Authors: Paul Ian Lim, Karan Singde, Janet Chimwayange, Darcy McIntosh and Kacey Boyle.");
+        authorsLabel.setBounds(halfWidth - authorsLabel.getWidth() / 2, 0, 10, 10);
+        authorsLabel.setFont(new Font("Arial", Font.BOLD, 10));
+        add(authorsLabel);
     }
 }
