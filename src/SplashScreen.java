@@ -14,7 +14,7 @@ public class SplashScreen extends JWindow {
             e.printStackTrace();
         }
         setVisible(false);
-        System.exit(0);
+
     }
     private void setup(){
         JPanel panel  = (JPanel) getContentPane();

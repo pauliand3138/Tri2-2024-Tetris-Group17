@@ -17,15 +17,18 @@ public class TetrisMainScreen extends JFrame {
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        //center application
+        setLocationRelativeTo(null);
+
         //layout manager
         setLayout(new BorderLayout());
 
         //adding components etc.,
-        setupMainScreen();
+        setupMainScreen(this);
 
         }
 
-        public void setupMainScreen(){
+        public void setupMainScreen(TetrisMainScreen tetrisMainScreen){
 
         JPanel backgroundPanel = new JPanel(){
             @Override
@@ -146,6 +149,10 @@ public class TetrisMainScreen extends JFrame {
                 e.g., ConfigScreen configScreen = new ConfigScreen();
                 configScreen.show();
                  */
+                Configuration configScreen = new Configuration();
+                tetrisMainScreen.setVisible(false);
+                configScreen.setVisible(true);
+
             }
         });
 

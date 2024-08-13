@@ -5,14 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Configuration {
-    public static void main(String[] args) {
+public class Configuration extends JFrame {
+
+    public Configuration() {
         Font VALUE_FONT = new Font("Calibri", Font.BOLD, 16);
 
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280, 720);
-        frame.setLocationRelativeTo(null);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1280, 720);
+        setLocationRelativeTo(null);
 
         JPanel titlePanel = new JPanel();
         JLabel titleLabel = new JLabel("Configuration");
@@ -161,18 +162,30 @@ public class Configuration {
         gridPanel.add(extendValue);
 
         JButton backButton = new JButton("Back");
+
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Back button pressed. Going back to main menu...");
+
+                setVisible(false);
+                TetrisMainScreen mainScreen = new TetrisMainScreen();
+                mainScreen.setVisible(true);
+            }
+        });
+
         JLabel footerLabel = new JLabel("Author: Group 17");
         footerLabel.setHorizontalAlignment(JLabel.CENTER);
         buttonPanel.add(backButton);
         buttonPanel.add(footerLabel);
 
+        add(titlePanel, BorderLayout.NORTH);
+        add(gridPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
 
-        frame.add(titlePanel, BorderLayout.NORTH);
-        frame.add(gridPanel, BorderLayout.CENTER);
-        frame.add(buttonPanel, BorderLayout.SOUTH);
-
-        frame.setVisible(true);
-
-
+    }
+    public static void main(String[] args) {
+        Configuration c = new Configuration();
+        c.setVisible(true);
     }
 }
