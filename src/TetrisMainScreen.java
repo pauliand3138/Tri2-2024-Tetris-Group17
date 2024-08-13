@@ -12,7 +12,8 @@ public class TetrisMainScreen extends JFrame {
         setTitle("Tetris Main Screen"); //window title
         setSize(650, 700); //size of the window
 
-        backgroundImage = Toolkit.getDefaultToolkit().getImage("Space Theme.jpg"); //loading background image.
+        // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
+        backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\Space Theme.jpg"); //loading background image.
 
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +42,8 @@ public class TetrisMainScreen extends JFrame {
         add(backgroundPanel, BorderLayout.CENTER);
 
         //uploaded Tetris Logo to main menu
-        ImageIcon tetrisLogo = new ImageIcon("tetris-seeklogo.png");
+        // Tetris Logo sourced from: https://seeklogo.com/vector-logo/387138/tetris
+        ImageIcon tetrisLogo = new ImageIcon("src\\tetris-seeklogo.png");
         Image logoImage = tetrisLogo.getImage().getScaledInstance(200,150,Image.SCALE_SMOOTH); //scaling the size of logo
         tetrisLogo = new ImageIcon(logoImage);
 
