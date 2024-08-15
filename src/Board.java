@@ -32,13 +32,28 @@ public class Board extends JPanel {
         blocks[4] = new BlockInfo(new int[][]{{0, 1, 1}, {1, 1, 0}}, Color.green, 5); // s block
         blocks[5] = new BlockInfo(new int[][]{{1, 1, 0}, {0, 1, 1}}, Color.red, 6); // z block
         blocks[6] = new BlockInfo(new int[][]{{1},{1},{1},{1}}, Color.cyan, 7);
+
+        createTetrisBlock();
     }
-    private void spawnBlock(){
+    private void createTetrisBlock(){
         Random rand = new Random();
         int index = rand.nextInt(TETRIS_BLOCK_COUNT);
-        block = new Block(blocks[index]);
+        int x = (COL_COUNT + 1) / 2;
+        block = new Block(blocks[index], x, 0);
     }
-
+    private void drawTetrisBlock(Graphics g){
+        BlockInfo blockInfo = block.getBlockInfo();
+        int x = block.getX();
+        int y = block.getY();
+        for(int row = 0 ; row < blockInfo.getRows() ; row++){
+            for(int col = 0; col < blockInfo.getColumns() ; col++){
+                if(blockInfo.getShape()[row][col] != 0){
+                    g.setColor(blockInfo.getColour());
+                    g.fillRect(x * gridCellSize + row * gridCellSize, y * gridCellSize + col * gridCellSize, gridCellSize, gridCellSize);
+                }
+            }
+        }
+    }
     private int findTetrisBlock(int blockNumber){
         for(int i = 0; i < TETRIS_BLOCK_COUNT ; i++){
             if(blocks[i].getNumber() == blockNumber){
@@ -47,10 +62,10 @@ public class Board extends JPanel {
         }
         return -1;
     }
-
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
+        drawTetrisBlock(g);
         for(int row = 0; row < ROW_COUNT; row++){
             for(int col = 0; col < COL_COUNT ; col++){
                 if(board[row][col] != 0){ // if there is a block on the board draw it to the screen
