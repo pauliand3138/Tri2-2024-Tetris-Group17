@@ -17,7 +17,6 @@ public class Board extends JPanel {
     }
     private void initialize(int width, int height){
         board = new int[ROW_COUNT][COL_COUNT];
-
         int boardWidth = (int)(width * 0.35F);
         gridCellSize = boardWidth / COL_COUNT;
         int boardHeight = (int)(gridCellSize * ROW_COUNT);
