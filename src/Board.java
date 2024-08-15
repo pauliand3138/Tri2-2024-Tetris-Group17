@@ -7,6 +7,7 @@ public class Board extends JPanel {
     private int gridCellSize;
     public Board(int width, int height){
         initialize(width, height);
+        setVisible(true);
     }
     public int getBoardHeight(){
         return getHeight();
@@ -15,9 +16,7 @@ public class Board extends JPanel {
         int boardWidth = (int)(width * 0.35F);
         gridCellSize = boardWidth / COL_COUNT;
         int boardHeight = (int)(gridCellSize * ROW_COUNT);
-        int x = width / 2 - boardWidth / 2;
-        int y = (int)(height * 0.10F);
-        setBounds(x, y, boardWidth, boardHeight);
+        setBounds(width / 2 - boardWidth / 2, 0, boardWidth, boardHeight);
         setBorder(BorderFactory.createLoweredBevelBorder());
     }
     @Override

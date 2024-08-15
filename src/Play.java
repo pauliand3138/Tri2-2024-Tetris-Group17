@@ -9,28 +9,39 @@ public class Play extends JPanel {
     }
     private void initialize(int width, int height){
         setSize(new Dimension(width, height));
-        setLayout(null);
+        setLayout(new BorderLayout());
     }
     private void addElements(){
         int width = 500;
         int height = 500;
         int halfWidth = width / 2;
 
-        JLabel playLabel = new JLabel("Play");
-        playLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        playLabel.setBounds(halfWidth - 25, 10, 50, 25);
-        add(playLabel);
+        float titlePanelPct = 0.30F;
+        float boardPanelPct = 0.60F;
+        float creatorsPanelPct = 1 - boardPanelPct - titlePanelPct;
 
-        Board board = new Board(width, height);
-        add(board);
-        board.setVisible(true);
+        int titlePanelHeight = (int)(height * titlePanelPct);
+        JPanel titlePanel = new JPanel();
+        titlePanel.setSize(width, titlePanelHeight);
+        JLabel titleLabel = new JLabel("Play");
+        titleLabel.setFont(new Font("Calibri", Font.BOLD, 25));
+        titlePanel.add(titleLabel);
+        add(titlePanel, BorderLayout.NORTH);
 
-        /*
-        JLabel authorsLabel = new JLabel("Authors: Paul Ian Lim, Karan Singde, Janet Chimwayange, Darcy McIntosh and Kacey Boyle.");
-        authorsLabel.setFont(new Font("Arial", Font.BOLD, 10));
-        Dimension authorsLabelDimension = authorsLabel.getPreferredSize();
-        authorsLabel.setBounds(width - authorsLabelDimension.width, y + board.getBoardHeight() + 15, authorsLabelDimension.width, authorsLabelDimension.height);
-        add(authorsLabel);
-         */
+        int boardPanelHeight = (int)(height * boardPanelPct);
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(null);
+        boardPanel.setSize(width, boardPanelHeight);
+        Board board = new Board(width, boardPanelHeight);
+        boardPanel.add(board);
+        add(boardPanel, BorderLayout.CENTER);
+
+        int creatorsPanelHeight = (int)(height * creatorsPanelPct);
+        JPanel creatorsPanel = new JPanel();
+        creatorsPanel.setSize(width, creatorsPanelHeight);
+        JLabel creatorsLabel = new JLabel("Creators: Paul Ian Lim, Karan Singde, Darcy McIntosh, Janet Chimwayange and Kacey Boyle.", SwingConstants.CENTER);
+        creatorsLabel.setFont(new Font("Calibri", Font.BOLD, 12));
+        creatorsPanel.add(creatorsLabel);
+        add(creatorsPanel, BorderLayout.SOUTH);
     }
 }
