@@ -3,7 +3,6 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-
 public class Play extends JPanel {
     public Play(int width, int height){
         initialize(width, height);
@@ -41,6 +40,7 @@ public class Play extends JPanel {
         JPanel creatorsPanel = new JPanel();
         creatorsPanel.setLayout(new BorderLayout());
         creatorsPanel.setSize(width, creatorsPanelHeight);
+
         JButton backButton = new JButton("Back");
         backButton.setPreferredSize(new Dimension(width, 20));
         backButton.setBackground(Color.WHITE);
