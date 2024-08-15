@@ -38,10 +38,11 @@ public class Board extends JPanel {
     private void createTetrisBlock(){
         Random rand = new Random();
         int index = rand.nextInt(TETRIS_BLOCK_COUNT);
-        int x = (COL_COUNT + 1) / 2;
+        int x = (int)(COL_COUNT / 2);
         block = new Block(blocks[index], x, 0);
     }
     private void drawTetrisBlock(Graphics g){
+        // rows and cols start at zero
         BlockInfo blockInfo = block.getBlockInfo();
         int x = block.getX();
         int y = block.getY();
@@ -49,7 +50,7 @@ public class Board extends JPanel {
             for(int col = 0; col < blockInfo.getColumns() ; col++){
                 if(blockInfo.getShape()[row][col] != 0){
                     g.setColor(blockInfo.getColour());
-                    g.fillRect(x * gridCellSize + row * gridCellSize, y * gridCellSize + col * gridCellSize, gridCellSize, gridCellSize);
+                    g.fillRect((x + col) * gridCellSize, (y + row) * gridCellSize, gridCellSize, gridCellSize);
                 }
             }
         }
