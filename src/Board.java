@@ -8,8 +8,15 @@ public class Board extends JPanel {
     private final int TETRIS_BLOCK_COUNT = 7;
     private int gridCellSize;
     private int[][] board;
+    /*
+        Board will store the tetris blocks unique number to keep track of where each was placed.
+    */
     private BlockInfo[] blocks;
-    private Block block;
+    /*
+        Blocks will store the different types of tetris blocks that can be generated. There are TETRIS_BLOCK_COUNT number of blocks
+        each with their own shape, colour, and unique number
+    */
+    private Block block; // Block is the current block being dropped in the game.
 
     public Board(int width, int height){
         initialize(width, height);
