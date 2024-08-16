@@ -138,6 +138,9 @@ public class TetrisMainScreen extends JFrame {
                 e.g., TetrisGameFile game = new TetrisGameFile();
                 game.startGame();
                  */
+                Play playScreen = new Play();
+                tetrisMainScreen.setVisible(false);
+                playScreen.setVisible(true);
             }
         });
 

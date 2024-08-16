@@ -3,18 +3,19 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-public class Play extends JPanel {
-    public Play(int width, int height){
-        initialize(width, height);
+public class Play extends JFrame {
+    public Play(){
+        initialize();
         addElements();
     }
-    private void initialize(int width, int height){
-        setSize(new Dimension(width, height));
+    private void initialize(){
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);
         setLayout(new BorderLayout());
     }
     private void addElements(){
-        int width = 500;
-        int height = 500;
+        int width = getWidth();
+        int height = getHeight();
 
         float titlePanelPct = 0.20F;
         float boardPanelPct = 0.50F;
