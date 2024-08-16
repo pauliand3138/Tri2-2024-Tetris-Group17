@@ -8,10 +8,8 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         SplashScreen splash = new SplashScreen();
         splash.displaySplash();
-
-        SwingUtilities.invokeLater(() -> {
-            TetrisMainScreen tetrisMainScreen = new TetrisMainScreen();
-            tetrisMainScreen.setVisible(true);
+        SwingUtilities.invokeLater(()->{
+            GameFrame gameFrame = new GameFrame();
         });
     }
 }
