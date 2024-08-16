@@ -10,8 +10,16 @@ public class Play extends JFrame {
     }
     private void initialize(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
         setLayout(new BorderLayout());
+
+        int width = 500;
+        int height = 500;
+
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension screenSize = tk.getScreenSize();
+        int x = screenSize.width / 2 - width / 2;
+        int y = screenSize.height / 2 - height / 2;
+        setBounds(x, y, width, height);
     }
     private void addElements(){
         int width = getWidth();
