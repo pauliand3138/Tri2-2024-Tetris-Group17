@@ -19,6 +19,7 @@ public class Board extends JPanel implements ActionListener {
         each with their own shape, colour, and unique number
     */
     private Block block; // Block is the current block being dropped in the game.
+    private Color[][] droppedBlocks;
 
     private Timer timer;
 
@@ -39,6 +40,9 @@ public class Board extends JPanel implements ActionListener {
         int boardWidth = (int)(width * 0.35F);
         gridCellSize = boardWidth / COL_COUNT;
         int boardHeight = (int)(gridCellSize * ROW_COUNT);
+
+        droppedBlocks = new Color[ROW_COUNT][COL_COUNT];
+
         setBounds(width / 2 - boardWidth / 2, 0, boardWidth, boardHeight);
         setBorder(BorderFactory.createLoweredBevelBorder());
 
@@ -68,8 +72,24 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private boolean isReachedBottom() {
-        System.out.println((block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT);
         return (int)(block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT;
+    }
+
+    private void setBlockAsDroppedBlock(){
+        int[][] shape = block.getBlockInfo().getShape();
+        int height = block.getBlockInfo().getRows();
+        int width = block.getBlockInfo().getColumns();
+        int x = block.getX();
+        int y = (int)block.getY();
+        Color color = block.getBlockInfo().getColour();
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if (shape[row][col] == 1) {
+                    droppedBlocks[row + y][col + x] = color;
+                }
+            }
+        }
     }
 
     private void drawTetrisBlock(Graphics g){
@@ -88,6 +108,25 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
+
+    private void drawDroppedBlocks(Graphics g) {
+        Color color;
+
+        for (int row = 0; row < ROW_COUNT; row++) {
+            for (int col = 0; col < COL_COUNT; col++) {
+                color = droppedBlocks[row][col];
+
+                if (color != null) {
+                    int x = col * gridCellSize;
+                    double y = row * gridCellSize;
+
+                    g.setColor(color);
+                    g.fillRect(x, (int)y, gridCellSize, gridCellSize);
+                }
+            }
+        }
+    }
+
     private int findTetrisBlock(int blockNumber){
         for(int i = 0; i < TETRIS_BLOCK_COUNT ; i++){
             if(blocks[i].getNumber() == blockNumber){
@@ -96,19 +135,21 @@ public class Board extends JPanel implements ActionListener {
         }
         return -1;
     }
+
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
+        drawDroppedBlocks(g);
         drawTetrisBlock(g);
-        for(int row = 0; row < ROW_COUNT; row++){
-            for(int col = 0; col < COL_COUNT ; col++){
-                if(board[row][col] != 0){ // if there is a block on the board draw it to the screen
-                    int index = findTetrisBlock(board[row][col]);
-                    g.setColor(blocks[index].getColour()); // Need to set the colour of the block
-                    g.fillRect(row * gridCellSize, col * gridCellSize, gridCellSize, gridCellSize);
-                }
-            }
-        }
+//        for(int row = 0; row < ROW_COUNT; row++){
+//            for(int col = 0; col < COL_COUNT ; col++){
+//                if(board[row][col] != 0){ // if there is a block on the board draw it to the screen
+//                    int index = findTetrisBlock(board[row][col]);
+//                    g.setColor(blocks[index].getColour()); // Need to set the colour of the block
+//                    g.fillRect(row * gridCellSize, col * gridCellSize, gridCellSize, gridCellSize);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -116,6 +157,10 @@ public class Board extends JPanel implements ActionListener {
         if (!isReachedBottom()) {
             dropBlock();
             repaint();
+        } else {
+            setBlockAsDroppedBlock();
+            createTetrisBlock();
         }
+
     }
 }
