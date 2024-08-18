@@ -25,8 +25,8 @@ public class Board extends JPanel implements ActionListener {
     public Board(int width, int height){
         initialize(width, height);
         setVisible(true);
-        startGame(this);
-        timer = new Timer(30, this);
+        //startGame(this);
+        timer = new Timer(10, this);
         timer.start();
     }
 
@@ -56,12 +56,20 @@ public class Board extends JPanel implements ActionListener {
     private void createTetrisBlock(){
         Random rand = new Random();
         int index = rand.nextInt(TETRIS_BLOCK_COUNT);
-        int x = (int)(COL_COUNT / 2) - 1; // Subtract 1 to make the block more centered
-        block = new Block(blocks[index], x, 0);
+        BlockInfo currentBlockInfo = blocks[index];
+        int y = currentBlockInfo.getRows();
+        int x = currentBlockInfo.getColumns();
+
+        block = new Block(currentBlockInfo, (COL_COUNT - x) / 2, -y);
     }
 
     public void dropBlock() {
         block.moveDown();
+    }
+
+    private boolean isReachedBottom() {
+        System.out.println((block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT);
+        return (int)(block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT;
     }
 
     private void drawTetrisBlock(Graphics g){
@@ -105,7 +113,9 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        dropBlock();
-        repaint();
+        if (!isReachedBottom()) {
+            dropBlock();
+            repaint();
+        }
     }
 }
