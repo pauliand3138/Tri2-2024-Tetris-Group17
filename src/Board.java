@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
-public class Board extends JPanel {
+public class Board extends JPanel implements ActionListener {
     private final int ROW_COUNT = 20;
     private final int COL_COUNT = 10;
     private final int TETRIS_BLOCK_COUNT = 7;
@@ -18,10 +20,20 @@ public class Board extends JPanel {
     */
     private Block block; // Block is the current block being dropped in the game.
 
+    private Timer timer;
+
     public Board(int width, int height){
         initialize(width, height);
         setVisible(true);
+        startGame(this);
+        timer = new Timer(30, this);
+        timer.start();
     }
+
+    public void startGame(Board board) {
+        new TetrisThread(board).start();
+    }
+
     private void initialize(int width, int height){
         board = new int[ROW_COUNT][COL_COUNT];
         int boardWidth = (int)(width * 0.35F);
@@ -44,19 +56,26 @@ public class Board extends JPanel {
     private void createTetrisBlock(){
         Random rand = new Random();
         int index = rand.nextInt(TETRIS_BLOCK_COUNT);
-        int x = (int)(COL_COUNT / 2);
+        int x = (int)(COL_COUNT / 2) - 1; // Subtract 1 to make the block more centered
         block = new Block(blocks[index], x, 0);
     }
+
+    public void dropBlock() {
+        block.moveDown();
+    }
+
     private void drawTetrisBlock(Graphics g){
         // rows and cols start at zero
         BlockInfo blockInfo = block.getBlockInfo();
-        int x = block.getX();
-        int y = block.getY();
+
         for(int row = 0 ; row < blockInfo.getRows() ; row++){
             for(int col = 0; col < blockInfo.getColumns() ; col++){
                 if(blockInfo.getShape()[row][col] != 0){
+                    int x = (block.getX() + col) * gridCellSize;
+                    double y = (block.getY() + row) * gridCellSize;
+
                     g.setColor(blockInfo.getColour());
-                    g.fillRect((x + col) * gridCellSize, (y + row) * gridCellSize, gridCellSize, gridCellSize);
+                    g.fillRect(x, (int)y, gridCellSize, gridCellSize);
                 }
             }
         }
@@ -82,5 +101,11 @@ public class Board extends JPanel {
                 }
             }
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        dropBlock();
+        repaint();
     }
 }

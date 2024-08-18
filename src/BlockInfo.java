@@ -21,8 +21,8 @@ public class BlockInfo {
     }
     public int getRows(){
         return shape.length;
-    }
+    } // block height
     public int getColumns(){
         return shape[0].length;
-    }
+    } // block width
 }

@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Play extends JFrame {
     public Play(){
@@ -54,6 +56,15 @@ public class Play extends JFrame {
         backButton.setPreferredSize(new Dimension(width, 20));
         backButton.setBackground(Color.WHITE);
         creatorsPanel.add(backButton, BorderLayout.NORTH);
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Back button pressed. Going back to main menu...");
+
+                setVisible(false);
+                TetrisMainScreen mainScreen = new TetrisMainScreen();
+                mainScreen.setVisible(true);
+            }
+        });
 
         JLabel creatorsLabel = new JLabel("Creators: Paul Ian Lim, Karan Singde, Darcy McIntosh, Janet Chimwayange and Kacey Boyle.", SwingConstants.CENTER);
         creatorsLabel.setFont(new Font("Calibri", Font.PLAIN, 12));

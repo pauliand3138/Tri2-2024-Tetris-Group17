@@ -79,7 +79,7 @@ public class CombinedMenuAndAnimation extends JFrame {
             setFocusable(true);
 
             // Timer to update the animation
-            timer = new Timer(100, this);
+            timer = new Timer(10, this);
             timer.start();
 
             // Key listener to pause and resume
@@ -141,7 +141,7 @@ public class CombinedMenuAndAnimation extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (!isPaused) {
-                blockY += 10;
+                blockY += 1;
                 if (blockY > getHeight()) {
                     blockY = 0; // Reset block to the top
                 }
