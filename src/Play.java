@@ -6,9 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Play extends JFrame {
+
+    private Board board;
+
     public Play(){
         initialize();
         addElements();
+        addKeybindControls();
     }
     private void initialize(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +47,7 @@ public class Play extends JFrame {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(null);
         boardPanel.setSize(width, boardPanelHeight);
-        Board board = new Board(width, boardPanelHeight);
+        board = new Board(width, boardPanelHeight);
         boardPanel.add(board);
         add(boardPanel, BorderLayout.CENTER);
 
@@ -71,5 +75,43 @@ public class Play extends JFrame {
         creatorsPanel.add(creatorsLabel, BorderLayout.SOUTH);
 
         add(creatorsPanel, BorderLayout.SOUTH);
+    }
+
+    public void addKeybindControls() {
+        InputMap inputMap = this.getRootPane().getInputMap();
+        ActionMap actionMap = this.getRootPane().getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "right");
+        inputMap.put(KeyStroke.getKeyStroke("LEFT"), "left");
+        inputMap.put(KeyStroke.getKeyStroke("UP"), "up");
+        inputMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
+
+        actionMap.put("right", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                board.moveBlockRight();
+            }
+        });
+
+        actionMap.put("left", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                board.moveBlockLeft();
+            }
+        });
+
+        actionMap.put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                board.rotateBlock();
+            }
+        });
+
+        actionMap.put("down", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                board.moveBlockDown();
+            }
+        });
     }
 }

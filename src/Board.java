@@ -31,6 +31,8 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
+
+
     public void startGame(Board board) {
         new TetrisThread(board).start();
     }
@@ -53,7 +55,7 @@ public class Board extends JPanel implements ActionListener {
         blocks[3] = new BlockInfo(new int[][]{{1, 1, 1}, {0, 1, 0}}, new Color(128,0,128), 4); // t block
         blocks[4] = new BlockInfo(new int[][]{{0, 1, 1}, {1, 1, 0}}, Color.green, 5); // s block
         blocks[5] = new BlockInfo(new int[][]{{1, 1, 0}, {0, 1, 1}}, Color.red, 6); // z block
-        blocks[6] = new BlockInfo(new int[][]{{1},{1},{1},{1}}, Color.cyan, 7);
+        blocks[6] = new BlockInfo(new int[][]{{1, 1, 1, 1}}, Color.cyan, 7);
 
         createTetrisBlock();
     }
@@ -67,12 +69,105 @@ public class Board extends JPanel implements ActionListener {
         block = new Block(currentBlockInfo, (COL_COUNT - x) / 2, -y);
     }
 
-    public void dropBlock() {
-        block.moveDown();
+    public void dropBlockNaturally() {
+        block.moveDownNaturally();
+    }
+
+    public void moveBlockRight() {
+        if (!isReachedRight()) {
+            block.moveRight();
+            repaint();
+        }
+    }
+
+    public void moveBlockLeft() {
+        if (!isReachedLeft()) {
+            block.moveLeft();
+            repaint();
+        }
+    }
+
+    public void moveBlockDown() {
+        if (!isReachedBottom()) {
+            block.moveDown();
+            repaint();
+        }
+    }
+
+    public void rotateBlock() {
+        block.rotate();
+        if (block.getX() < 0) block.setX(0);
+        if (block.getX() + block.getBlockInfo().getColumns() >= COL_COUNT) block.setX(COL_COUNT - block.getBlockInfo().getColumns());
+        if ((int)(block.getBlockInfo().getRows() + block.getY()) >= ROW_COUNT) block.setY(ROW_COUNT - block.getBlockInfo().getRows());
+        repaint();
+    }
+
+    private boolean isReachedRight() {
+        if (block.getX() + block.getBlockInfo().getColumns() == COL_COUNT) return true;
+
+        int[][] shape = block.getBlockInfo().getShape();
+        int width = block.getBlockInfo().getColumns();
+        int height = block.getBlockInfo().getRows();
+
+        for (int row = 0; row < height; row++) {
+            for (int col = width - 1; col >= 0; col--) {
+                if(shape[row][col] != 0) {
+                    int x = col + block.getX() + 1;
+                    int y = row + (int)Math.floor(block.getY());
+                    if (y < 0) break; // when the block still hasn't entered the frame
+                    if (droppedBlocks[y][x] != null) return true;
+                    break;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isReachedLeft() {
+        if (block.getX() == 0) return true;
+
+        int[][] shape = block.getBlockInfo().getShape();
+        int width = block.getBlockInfo().getColumns();
+        int height = block.getBlockInfo().getRows();
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                if(shape[row][col] != 0) {
+                    int x = col + block.getX() - 1;
+                    int y = row + (int)Math.floor(block.getY());
+                    if (y < 0) break; // when the block still hasn't entered the frame
+                    if (droppedBlocks[y][x] != null) return true;
+                    break;
+                }
+            }
+        }
+
+        return false;
     }
 
     private boolean isReachedBottom() {
-        return (int)(block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT;
+        if ((int)(block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT) {
+            return true;
+        }
+
+        int[][] shape = block.getBlockInfo().getShape();
+        int width = block.getBlockInfo().getColumns();
+        int height = block.getBlockInfo().getRows();
+
+        for (int col = 0; col < width; col++) {
+            for (int row = height - 1; row >= 0; row--) {
+                if(shape[row][col] != 0) {
+                    int x = col + block.getX();
+                    int y = row + (int)Math.floor(block.getY()) + 1;
+                    if (y < 0) break; // when the block still hasn't entered the frame
+                    if (droppedBlocks[y][x] != null) return true;
+                    break;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void setBlockAsDroppedBlock(){
@@ -155,7 +250,7 @@ public class Board extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!isReachedBottom()) {
-            dropBlock();
+            dropBlockNaturally();
             repaint();
         } else {
             setBlockAsDroppedBlock();
