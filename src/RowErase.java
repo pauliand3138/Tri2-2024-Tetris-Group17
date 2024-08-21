@@ -4,10 +4,12 @@ public class RowErase {
     private final int BOARD_WIDTH = 10;
     private final int BOARD_HEIGHT = 20;
     private final Tetrominoes[][] board;
+    private final int score;
 
     public RowErase() {
         board = new Tetrominoes[BOARD_HEIGHT][BOARD_WIDTH];
         clearBoard();
+        score = 0;
     }
 
     public void clearBoard() {
@@ -25,20 +27,7 @@ public class RowErase {
             }
             System.out.println();
         }
-    }
-
-    public boolean detectCollision(Tetrominoes piece, int x, int y) {
-        for (int i = 0; i < 4; i++) {
-            int newX = x + piece.x(i);
-            int newY = y - piece.y(i);
-            if (newX < 0 || newX >= BOARD_WIDTH || newY < 0 || newY >= BOARD_HEIGHT) {
-                return true; // Collision with boundaries
-            }
-            if (board[newY][newX] != Tetrominoes.NoShape) {
-                return true; // Collision with settled blocks
-            }
-        }
-        return false;
+        System.out.println("Score: " + score);
     }
 
     public enum Tetrominoes {
@@ -54,15 +43,6 @@ public class RowErase {
         Tetrominoes(Color ignoredColor) {
         }
 
-        public int x(int index) {
-            // Define x-coordinates for each shape
-            return 0;
-        }
-
-        public int y(int index) {
-            // Define y-coordinates for each shape
-            return 0;
-        }
     }
 
     public static void main(String[] args) {
