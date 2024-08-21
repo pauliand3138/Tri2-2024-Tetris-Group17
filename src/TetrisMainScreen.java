@@ -10,23 +10,26 @@ public class TetrisMainScreen extends JFrame {
 
     public TetrisMainScreen() {
         setTitle("Tetris Main Screen"); //window title
-        setSize(650, 700); //size of the window
+        setSize(1280, 720); //size of the window
 
         // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
-        backgroundImage = Toolkit.getDefaultToolkit().getImage("Space Theme.jpg"); //loading background image.
+        backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\Space Theme.jpg"); //loading background image.
 
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //center application
+        setLocationRelativeTo(null);
 
         //layout manager
         setLayout(new BorderLayout());
 
         //adding components etc.,
-        setupMainScreen();
+        setupMainScreen(this);
 
         }
 
-        public void setupMainScreen(){
+        public void setupMainScreen(TetrisMainScreen tetrisMainScreen){
 
         JPanel backgroundPanel = new JPanel(){
             @Override
@@ -40,7 +43,7 @@ public class TetrisMainScreen extends JFrame {
 
         //uploaded Tetris Logo to main menu
         // Tetris Logo sourced from: https://seeklogo.com/vector-logo/387138/tetris
-        ImageIcon tetrisLogo = new ImageIcon("tetris-seeklogo.png");
+        ImageIcon tetrisLogo = new ImageIcon("src\\tetris-seeklogo.png");
         Image logoImage = tetrisLogo.getImage().getScaledInstance(200,150,Image.SCALE_SMOOTH); //scaling the size of logo
         tetrisLogo = new ImageIcon(logoImage);
 
@@ -135,6 +138,9 @@ public class TetrisMainScreen extends JFrame {
                 e.g., TetrisGameFile game = new TetrisGameFile();
                 game.startGame();
                  */
+                Play playScreen = new Play();
+                tetrisMainScreen.setVisible(false);
+                playScreen.setVisible(true);
             }
         });
 
@@ -148,6 +154,10 @@ public class TetrisMainScreen extends JFrame {
                 e.g., ConfigScreen configScreen = new ConfigScreen();
                 configScreen.show();
                  */
+                Configuration configScreen = new Configuration();
+                tetrisMainScreen.setVisible(false);
+                configScreen.setVisible(true);
+
             }
         });
 
@@ -161,7 +171,9 @@ public class TetrisMainScreen extends JFrame {
                 e.g., HighScoresScreen highScoresScreen = new HighScoresScreen();
                 highScoresScreen.show();
                  */
-
+                TetrisHighScoreScreen highScoreScreen = new TetrisHighScoreScreen();
+                tetrisMainScreen.setVisible(false);
+                highScoreScreen.setVisible(true);
             }
         });
 
