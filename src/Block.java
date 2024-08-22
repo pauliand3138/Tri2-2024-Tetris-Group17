@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Block {
     private BlockInfo blockInfo;
     private int x;
@@ -29,18 +31,11 @@ public class Block {
         x++;
     }
     public void rotate() {
+        System.out.println(blockInfo.getCurrentRotation());
         blockInfo.setCurrentRotation(blockInfo.getCurrentRotation() + 1);
         if (blockInfo.getCurrentRotation() > 3) { blockInfo.setCurrentRotation(0); }
         blockInfo.setShape(blockInfo.getShapes()[blockInfo.getCurrentRotation()]);
+        System.out.println(blockInfo.getCurrentRotation());
 
-        if (blockInfo.getNumber() == 7) {
-            if (blockInfo.getColumns() == 1) {
-                this.setX(this.getX() + 1);
-                this.setY((int)this.getY() - 1);
-            } else {
-                this.setX(this.getX() - 1);
-                this.setY((int)this.getY() + 1);
-            }
-        }
     }
 }

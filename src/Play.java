@@ -15,7 +15,7 @@ public class Play extends JFrame {
         addKeybindControls();
     }
     private void initialize(){
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         int width = 500;
@@ -65,6 +65,7 @@ public class Play extends JFrame {
                 System.out.println("Back button pressed. Going back to main menu...");
 
                 setVisible(false);
+
                 TetrisMainScreen mainScreen = new TetrisMainScreen();
                 mainScreen.setVisible(true);
             }

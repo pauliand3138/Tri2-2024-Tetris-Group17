@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
@@ -31,8 +32,6 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
-
-
     public void startGame(Board board) {
         new TetrisThread(board).start();
     }
@@ -49,16 +48,12 @@ public class Board extends JPanel implements ActionListener {
         setBorder(BorderFactory.createLoweredBevelBorder());
 
         blocks = new BlockInfo[TETRIS_BLOCK_COUNT];
-        blocks[0] = new BlockInfo(new int[][]{{1, 1}, {1, 1}}, Color.yellow, 1); // O block
-        blocks[1] = new BlockInfo(new int[][]{{1, 0}, {1, 0},{1, 1}}, Color.orange, 2); // l block
-        blocks[2] = new BlockInfo(new int[][]{{0, 1}, {0, 1}, {1, 1}}, new Color(0, 0, 139), 3); // j block
-        blocks[3] = new BlockInfo(new int[][]{{1, 1, 1}, {0, 1, 0}}, new Color(128,0,128), 4); // t block
-        blocks[4] = new BlockInfo(new int[][]{{0, 1, 1}, {1, 1, 0}}, Color.green, 5); // s block
-        blocks[5] = new BlockInfo(new int[][]{{1, 1, 0}, {0, 1, 1}}, Color.red, 6); // z block
-        blocks[6] = new BlockInfo(new int[][]{{1, 1, 1, 1}}, Color.cyan, 7);
+
+        initBlockInfo();
 
         createTetrisBlock();
     }
+
     private void createTetrisBlock(){
         Random rand = new Random();
         int index = rand.nextInt(TETRIS_BLOCK_COUNT);
@@ -67,6 +62,17 @@ public class Board extends JPanel implements ActionListener {
         int x = currentBlockInfo.getColumns();
 
         block = new Block(currentBlockInfo, (COL_COUNT - x) / 2, -y);
+        System.out.println(Arrays.deepToString(block.getBlockInfo().getShapes()));
+    }
+
+    public void initBlockInfo() {
+        blocks[0] = new BlockInfo(new int[][]{{1, 1}, {1, 1}}, Color.yellow, 1); // O block
+        blocks[1] = new BlockInfo(new int[][]{{1, 0}, {1, 0},{1, 1}}, Color.orange, 2); // l block
+        blocks[2] = new BlockInfo(new int[][]{{0, 1}, {0, 1}, {1, 1}}, new Color(0, 0, 139), 3); // j block
+        blocks[3] = new BlockInfo(new int[][]{{1, 1, 1}, {0, 1, 0}}, new Color(128,0,128), 4); // t block
+        blocks[4] = new BlockInfo(new int[][]{{0, 1, 1}, {1, 1, 0}}, Color.green, 5); // s block
+        blocks[5] = new BlockInfo(new int[][]{{1, 1, 0}, {0, 1, 1}}, Color.red, 6); // z block
+        blocks[6] = new BlockInfo(new int[][]{{1, 1, 1, 1}}, Color.cyan, 7);
     }
 
     public void dropBlockNaturally() {
@@ -96,6 +102,7 @@ public class Board extends JPanel implements ActionListener {
 
     public void rotateBlock() {
         block.rotate();
+        if (block.getY() < 0) block.setY(0);
         if (block.getX() < 0) block.setX(0);
         if (block.getX() + block.getBlockInfo().getColumns() >= COL_COUNT) block.setX(COL_COUNT - block.getBlockInfo().getColumns());
         if ((int)(block.getBlockInfo().getRows() + block.getY()) >= ROW_COUNT) block.setY(ROW_COUNT - block.getBlockInfo().getRows());
@@ -249,13 +256,15 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!isReachedBottom()) {
-            dropBlockNaturally();
-            repaint();
-        } else {
-            setBlockAsDroppedBlock();
-            createTetrisBlock();
+        if (isShowing()) {
+            if (!isReachedBottom()) {
+                dropBlockNaturally();
+                repaint();
+            } else {
+                setBlockAsDroppedBlock();
+                createTetrisBlock();
+                initBlockInfo();
+            }
         }
-
     }
 }

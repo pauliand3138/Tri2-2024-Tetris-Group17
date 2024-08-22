@@ -11,6 +11,7 @@ public class BlockInfo {
         this.shape = shape;
         this.colour = colour;
         this.number = number;
+        this.currentRotation = 1;
         createShapes();
     }
     public int[][] getShape(){
@@ -61,5 +62,6 @@ public class BlockInfo {
 
             shape = shapes[i];
         }
+        shape = shapes[1]; // Added this line to prevent rotate not working during first press
     }
 }
