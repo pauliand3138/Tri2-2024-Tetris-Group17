@@ -22,6 +22,7 @@ public class Board extends JPanel implements ActionListener {
     private Color[][] droppedBlocks;
 
     private Timer timer;
+    private boolean isPaused; // Flag to track if the game is paused
 
     public Board(int width, int height){
         initialize(width, height);
@@ -70,36 +71,43 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void dropBlockNaturally() {
-        block.moveDownNaturally();
+        if (!isPaused) {
+            block.moveDownNaturally();
+            repaint();
+        }
     }
 
     public void moveBlockRight() {
-        if (!isReachedRight()) {
+        if (!isPaused && !isReachedRight()) {
             block.moveRight();
             repaint();
         }
     }
 
     public void moveBlockLeft() {
-        if (!isReachedLeft()) {
+        if (!isPaused && !isReachedLeft()) {
             block.moveLeft();
             repaint();
         }
     }
 
     public void moveBlockDown() {
-        if (!isReachedBottom()) {
+        if (!isPaused && !isReachedBottom()) {
             block.moveDown();
             repaint();
         }
     }
 
     public void rotateBlock() {
-        block.rotate();
-        if (block.getX() < 0) block.setX(0);
-        if (block.getX() + block.getBlockInfo().getColumns() >= COL_COUNT) block.setX(COL_COUNT - block.getBlockInfo().getColumns());
-        if ((int)(block.getBlockInfo().getRows() + block.getY()) >= ROW_COUNT) block.setY(ROW_COUNT - block.getBlockInfo().getRows());
-        repaint();
+        if (!isPaused) {
+            block.rotate();
+            if (block.getX() < 0) block.setX(0);
+            if (block.getX() + block.getBlockInfo().getColumns() >= COL_COUNT)
+                block.setX(COL_COUNT - block.getBlockInfo().getColumns());
+            if ((int) (block.getBlockInfo().getRows() + block.getY()) >= ROW_COUNT)
+                block.setY(ROW_COUNT - block.getBlockInfo().getRows());
+            repaint();
+        }
     }
 
     private boolean isReachedRight() {
@@ -249,13 +257,26 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (!isReachedBottom()) {
-            dropBlockNaturally();
+        if(!isPaused) {
+            if (!isReachedBottom()) {
+                dropBlockNaturally();
+                repaint();
+            } else {
+                setBlockAsDroppedBlock();
+                createTetrisBlock();
+            }
             repaint();
-        } else {
-            setBlockAsDroppedBlock();
-            createTetrisBlock();
         }
-
     }
+
+    public synchronized void pauseGame() {
+        isPaused = true; // pause flag set to true
+        timer.stop();
+    }
+
+    public synchronized void resumeGame() {
+        isPaused = false; // pause flag set to false
+        timer.start();
+    }
+
 }
