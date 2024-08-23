@@ -186,6 +186,6 @@ public class Play extends JFrame {
         pauseOverlayLabel.setVisible(false); // Hide overlay
         layeredPane.moveToFront(board); // Move overlay to the back
         board.resumeGame();
-        board.requestFocusInWindow(); // Ensure the board has focus to capture key movement
+        board.requestFocusInWindow(); // Ensure the board has focus to capture key movements
     }
 }

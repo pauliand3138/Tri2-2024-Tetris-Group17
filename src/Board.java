@@ -196,7 +196,7 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void drawTetrisBlock(Graphics g){
-        // rows and cols start at zero
+        // rows and columns start at zero
         BlockInfo blockInfo = block.getBlockInfo();
 
         for(int row = 0 ; row < blockInfo.getRows() ; row++){
