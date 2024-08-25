@@ -115,7 +115,7 @@ public class Play extends JFrame {
         //add(creatorsPanel, BorderLayout.SOUTH);
 
         // Without activating, initialize pause overlay
-        pauseOverlayLabel = new JLabel("Press any key to continue the game", SwingConstants.CENTER);
+        pauseOverlayLabel = new JLabel("Press P to continue the game", SwingConstants.CENTER);
         pauseOverlayLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
         pauseOverlayLabel.setForeground(Color.BLACK);
         pauseOverlayLabel.setBounds(0, boardPanelHeight / 2 - 20, width, 40); // Center position
@@ -189,7 +189,7 @@ public class Play extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 //System.out.println("key adapter");
-                if (isPlayPaused && pauseOverlayLabel.isVisible()) {
+                if (isPlayPaused && pauseOverlayLabel.isVisible() && e.getKeyCode() == KeyEvent.VK_P) {
                     isKeyAdapterResume = true;
                     resumeGame();
                 }
