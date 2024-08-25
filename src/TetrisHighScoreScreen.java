@@ -13,7 +13,7 @@ class TetrisHighScoreScreen extends JFrame {
         List<PlayerScore> playerScores = new ArrayList<>();
 
         setTitle("Tetris High Score Screen");
-        setSize(1280, 720);
+        setSize(1080, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -54,9 +54,22 @@ class TetrisHighScoreScreen extends JFrame {
             panel.add(label);
         }
 
-        JPanel buttonPanel = new JPanel();
+        float titlePanelPct = 0.20F;
+        float highScorePanelPct = 0.50F;
+        float creatorsPanelPct = 1 - highScorePanelPct - titlePanelPct;
+
+        int creatorsPanelHeight = (int) (720 * creatorsPanelPct);
+        JPanel creatorsPanel = new JPanel();
+        creatorsPanel.setLayout(new BorderLayout());
+        creatorsPanel.setSize(1080, creatorsPanelHeight);
+
+        ScrollingTextPanel scrollingTextPanel = new ScrollingTextPanel();
+        scrollingTextPanel.setPreferredSize(new Dimension(1080, 30));
+        creatorsPanel.add(scrollingTextPanel, BorderLayout.CENTER);
+
         JButton backButton = new JButton("Back");
-        buttonPanel.setLayout(new GridLayout(2, 1, 0, 5));
+        backButton.setPreferredSize(new Dimension(360, 30));
+        backButton.setBackground(Color.WHITE);
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,15 +80,15 @@ class TetrisHighScoreScreen extends JFrame {
                 mainScreen.setVisible(true);
             }
         });
+        //creatorsPanel.add(backButton, BorderLayout.NORTH);
 
-        JLabel footerLabel = new JLabel("Author: Group 17");
-        footerLabel.setHorizontalAlignment(JLabel.CENTER);
-        buttonPanel.add(backButton);
-        buttonPanel.add(footerLabel);
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
+        backButtonPanel.add(backButton);
+        creatorsPanel.add(backButtonPanel, BorderLayout.NORTH);
 
         add(titlePanel, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        add(creatorsPanel, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {

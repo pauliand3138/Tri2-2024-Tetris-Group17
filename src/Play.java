@@ -76,7 +76,7 @@ public class Play extends JFrame {
         creatorsPanel.setSize(width, creatorsPanelHeight);
 
         JButton backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(250, 40));
+        backButton.setPreferredSize(new Dimension(250, 30));
         backButton.setBackground(Color.WHITE);
         //creatorsPanel.add(backButton, BorderLayout.NORTH);
 

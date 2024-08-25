@@ -25,7 +25,7 @@ public class ScrollingTextPanel extends JPanel implements ActionListener {
         String combinedText = String.join("   ", developers); // spaces between names
         textWidth = getFontMetrics(getFont()).stringWidth(combinedText);
 
-        timer = new Timer(50, this); // smoother scrolling by updating every 25 seconds
+        timer = new Timer(40, this); // smoother scrolling by updating every 25 seconds
         timer.start();
     }
 
