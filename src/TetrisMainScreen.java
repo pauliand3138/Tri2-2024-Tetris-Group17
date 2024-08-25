@@ -10,7 +10,7 @@ public class TetrisMainScreen extends JFrame {
 
     public TetrisMainScreen() {
         setTitle("Tetris Main Screen"); //window title
-        setSize(550, 600); //size of the window
+        setSize(550, 700); //size of the window
 
         // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
         backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\Space Theme.jpg"); //loading background image.
@@ -185,7 +185,6 @@ public class TetrisMainScreen extends JFrame {
                 }
             }
         });
-
     }
 
     //Styled buttons Method

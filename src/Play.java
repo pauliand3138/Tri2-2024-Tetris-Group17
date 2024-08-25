@@ -8,7 +8,7 @@ import java.awt.event.KeyEvent;
 public class Play extends JFrame {
 
     private Board board;
-    private boolean isPaused; // checks if game paused
+    boolean isPaused = false; // checks if game paused
     private JLabel pauseOverlayLabel; // Pause Overlay message
     private JLayeredPane layeredPane;
 
@@ -16,15 +16,15 @@ public class Play extends JFrame {
         initialize();
         addElements();
         addKeybindControls();
-        board.startGame(board); // Starts the game here
+        //board.startGame(board); // Starts the game here
         setVisible(true);
 
         // board focus on startup and after resuming game
-        board.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                board.requestFocusInWindow();
-            }
-        });
+//        //board.addFocusListener(new java.awt.event.FocusAdapter() {
+//            public void focusGained(java.awt.event.FocusEvent evt) {
+//                board.requestFocusInWindow();
+//            }
+//        });
     }
 
     private void initialize() {
@@ -40,7 +40,7 @@ public class Play extends JFrame {
         int y = screenSize.height / 2 - height / 2;
         setBounds(x, y, width, height);
 
-        isPaused = false;
+        //isPaused = false;
 
         layeredPane = getLayeredPane(); // initializing the layered pane
     }
@@ -95,8 +95,7 @@ public class Play extends JFrame {
                     TetrisMainScreen mainScreen = new TetrisMainScreen();
                     mainScreen.setVisible(true);
                 } else {
-                    // if 'No'
-                    showPauseOverlay();
+                    resumeGame();
                 }
             }
         });
@@ -116,8 +115,8 @@ public class Play extends JFrame {
 
         // Without activating, initialize pause overlay
         pauseOverlayLabel = new JLabel("Press any key to continue the game", SwingConstants.CENTER);
-        pauseOverlayLabel.setFont(new Font("Calibri", Font.BOLD, 20));
-        pauseOverlayLabel.setForeground(Color.RED);
+        pauseOverlayLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
+        pauseOverlayLabel.setForeground(Color.BLACK);
         pauseOverlayLabel.setBounds(0, boardPanelHeight / 2 - 20, width, 40); // Center position
         layeredPane.add(pauseOverlayLabel, JLayeredPane.POPUP_LAYER);
         pauseOverlayLabel.setVisible(false);
@@ -131,6 +130,7 @@ public class Play extends JFrame {
         inputMap.put(KeyStroke.getKeyStroke("LEFT"), "left");
         inputMap.put(KeyStroke.getKeyStroke("UP"), "up");
         inputMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
+        inputMap.put(KeyStroke.getKeyStroke("P"), "p");
 
         actionMap.put("right", new AbstractAction() {
             @Override
@@ -160,7 +160,22 @@ public class Play extends JFrame {
             }
         });
 
-        // Listener for resuming game
+        actionMap.put("p", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isPaused) resumeGame();
+
+                if (!isPaused && !pauseOverlayLabel.isVisible()) {
+                    System.out.println("Paused!");
+                    pauseGame();
+                    return;
+                }
+//                System.out.println(isPaused);
+//                System.out.println(pauseOverlayLabel.isVisible());
+            }
+        });
+
+         //Listener for resuming game
         pauseOverlayLabel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -170,7 +185,7 @@ public class Play extends JFrame {
             }
         });
 
-        pauseOverlayLabel.setFocusable(true); // Pause overlay is focused and is able to detect key presses
+        //pauseOverlayLabel.setFocusable(true); // Pause overlay is focused and is able to detect key presses
     }
 
     private void showPauseOverlay() {
@@ -191,6 +206,6 @@ public class Play extends JFrame {
         pauseOverlayLabel.setVisible(false); // hides the overlay
         layeredPane.moveToFront(board); // moves overlay to back
         board.resumeGame();
-        board.requestFocusInWindow(); // board focused to capture key movements
+        requestFocusInWindow(); // board focused to capture key movements
     }
 }

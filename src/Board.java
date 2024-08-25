@@ -22,7 +22,7 @@ public class Board extends JPanel implements ActionListener {
     private Block block; // Block is the current block being dropped in the game.
     private Color[][] droppedBlocks;
 
-    private Timer timer;
+    private final Timer timer;
     private boolean isPaused; // checks if game is paused
 
     public Board(int width, int height){
@@ -33,9 +33,9 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
-    public void startGame(Board board) {
-        new TetrisThread(board).start();
-    }
+//    public void startGame(Board board) {
+//        new TetrisThread(board).start();
+//    }
 
     private void initialize(int width, int height){
         board = new int[ROW_COUNT][COL_COUNT];
@@ -73,36 +73,44 @@ public class Board extends JPanel implements ActionListener {
         blocks[6] = new BlockInfo(new int[][]{{1, 1, 1, 1}}, Color.cyan, 7);
     }
 
+    public boolean isBlockOutside() {
+        if (block.getY() < 0) {
+            block = null;
+            return true;
+        }
+        return false;
+    }
+
     public void dropBlockNaturally() {
-        if (!isPaused) {
+        if (block != null && !isPaused) {
             block.moveDownNaturally();
             repaint();
         }
     }
 
     public void moveBlockRight() {
-        if (!isPaused && !isReachedRight()) {
+        if (block != null && !isPaused && !isReachedRight()) {
             block.moveRight();
             repaint();
         }
     }
 
     public void moveBlockLeft() {
-        if (!isPaused && !isReachedLeft()) {
+        if (block != null && !isPaused && !isReachedLeft()) {
             block.moveLeft();
             repaint();
         }
     }
 
     public void moveBlockDown() {
-        if (!isPaused && !isReachedBottom()) {
+        if (block != null && !isPaused && !isReachedBottom()) {
             block.moveDown();
             repaint();
         }
     }
 
     public void rotateBlock() {
-        if (!isPaused) {
+        if (block != null && !isPaused) {
             block.rotate();
             if (block.getX() < 0) block.setX(0);
             if (block.getX() + block.getBlockInfo().getColumns() >= COL_COUNT)
@@ -181,6 +189,43 @@ public class Board extends JPanel implements ActionListener {
         return false;
     }
 
+    public void clearLines() {
+        boolean completedLine;
+
+        for (int row = ROW_COUNT - 1; row >= 0; row--) {
+            completedLine = true;
+
+            for (int col = 0; col < COL_COUNT; col++) {
+                if (droppedBlocks[row][col] == null) {
+                    completedLine = false;
+                    break;
+                }
+            }
+
+            if (completedLine) {
+                clearLine(row);
+                moveLinesDown(row);
+                clearLine(0);
+                row++;
+                repaint();
+            }
+        }
+    }
+
+    private void moveLinesDown(int row) {
+        for(int r = row; r > 0; r-- ) {
+            for (int col = 0; col < COL_COUNT; col++) {
+                droppedBlocks[r][col] = droppedBlocks[r-1][col];
+            }
+        }
+    }
+
+    private void clearLine(int row) {
+        for(int i = 0; i < COL_COUNT; i++) {
+            droppedBlocks[row][i] = null;
+        }
+    }
+
     private void setBlockAsDroppedBlock(){
         int[][] shape = block.getBlockInfo().getShape();
         int height = block.getBlockInfo().getRows();
@@ -191,7 +236,7 @@ public class Board extends JPanel implements ActionListener {
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                if (shape[row][col] == 1) {
+                if (shape[row][col] == 1 && row + y >= 0 && col + x >= 0 ) {
                     droppedBlocks[row + y][col + x] = color;
                 }
             }
@@ -237,29 +282,37 @@ public class Board extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         drawDroppedBlocks(g);
-        drawTetrisBlock(g);
+        if (block!= null) {
+            drawTetrisBlock(g);
+        }
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (!isPaused) {
-            if (!isReachedBottom()) {
-                dropBlockNaturally();
-            } else {
-                setBlockAsDroppedBlock();
-                createTetrisBlock();
-            }
-            repaint();
+                if (!isReachedBottom()) {
+                    dropBlockNaturally();
+                } else {
+                    setBlockAsDroppedBlock();
+                    clearLines();
+                    if (isBlockOutside()) {
+                        System.out.println("Game Over");
+                        timer.stop();
+                    } else {
+                        createTetrisBlock();
+                    }
+                }
+                repaint();
         }
     }
 
-    public synchronized void pauseGame() {
+    public void pauseGame() {
         isPaused = true;
         timer.stop();
     }
 
-    public synchronized void resumeGame() {
+    public void resumeGame() {
         isPaused = false;
         timer.start();
     }
