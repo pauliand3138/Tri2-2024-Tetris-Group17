@@ -23,7 +23,7 @@ public class Board extends JPanel implements ActionListener {
     private Color[][] droppedBlocks;
 
     private final Timer timer;
-    private boolean isPaused; // checks if game is paused
+    public boolean isPaused; // checks if game is paused
 
     public Board(int width, int height){
         initialize(width, height);

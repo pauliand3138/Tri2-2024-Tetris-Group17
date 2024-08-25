@@ -142,7 +142,9 @@ public class CombinedMenuAndAnimation extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if (!isPaused) {
                 blockY += 1;
-
+                if (blockY > 0) {
+                    blockY = 0;
+                }
                 repaint(); // Request to redraw the panel
             }
         }

@@ -8,7 +8,8 @@ import java.awt.event.KeyEvent;
 public class Play extends JFrame {
 
     private Board board;
-    boolean isPaused = false; // checks if game paused
+    boolean isPlayPaused = false;
+    boolean isKeyAdapterResume = false;// checks if game paused
     private JLabel pauseOverlayLabel; // Pause Overlay message
     private JLayeredPane layeredPane;
 
@@ -135,41 +136,49 @@ public class Play extends JFrame {
         actionMap.put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPaused) board.moveBlockRight();
+                if (!isPlayPaused) board.moveBlockRight();
             }
         });
 
         actionMap.put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPaused) board.moveBlockLeft();
+                if (!isPlayPaused) board.moveBlockLeft();
             }
         });
 
         actionMap.put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPaused) board.rotateBlock();
+                if (!isPlayPaused) board.rotateBlock();
             }
         });
 
         actionMap.put("down", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPaused) board.moveBlockDown();
+                if (!isPlayPaused) board.moveBlockDown();
             }
         });
 
         actionMap.put("p", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isPaused) resumeGame();
-
-                if (!isPaused && !pauseOverlayLabel.isVisible()) {
-                    System.out.println("Paused!");
+                if (isKeyAdapterResume) {
+                    isKeyAdapterResume = false;
+                    resumeGame();
+                } else {
                     pauseGame();
-                    return;
                 }
+//                if (board.isPaused) resumeGame();
+//                if (!board.isPaused) pauseGame();
+//                if (isPlayPaused) resumeGame();
+//
+//                if (!isPlayPaused && !pauseOverlayLabel.isVisible()) {
+//                    System.out.println("Paused!");
+//                    pauseGame();
+//                    return;
+//                }
 //                System.out.println(isPaused);
 //                System.out.println(pauseOverlayLabel.isVisible());
             }
@@ -179,7 +188,9 @@ public class Play extends JFrame {
         pauseOverlayLabel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (isPaused && pauseOverlayLabel.isVisible()) {
+                //System.out.println("key adapter");
+                if (isPlayPaused && pauseOverlayLabel.isVisible()) {
+                    isKeyAdapterResume = true;
                     resumeGame();
                 }
             }
@@ -196,13 +207,13 @@ public class Play extends JFrame {
     }
 
     private void pauseGame() {
-        isPaused = true; // Game is paused
+        isPlayPaused = true; // Game is paused
         board.pauseGame();
         showPauseOverlay();
     }
 
     private void resumeGame() {
-        isPaused = false; // game resumed
+        isPlayPaused = false; // game resumed
         pauseOverlayLabel.setVisible(false); // hides the overlay
         layeredPane.moveToFront(board); // moves overlay to back
         board.resumeGame();
