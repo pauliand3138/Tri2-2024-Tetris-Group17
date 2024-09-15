@@ -5,6 +5,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.util.Collections.min;
+
 public class Play extends JFrame {
 
     private Board board;
@@ -32,9 +36,10 @@ public class Play extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        int width = 500;
-        int height = 500;
-
+        int width = max((int)(Common.gameConfig.getFieldWidth() / 10.0 * 500), 500);
+        int height = 425 + (Common.gameConfig.getFieldHeight() - 15) * 16; //Fixed formula after trial and error
+        System.out.println(width);
+        System.out.println(height);
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
         int x = screenSize.width / 2 - width / 2;
@@ -76,11 +81,13 @@ public class Play extends JFrame {
         creatorsPanel.setSize(width, creatorsPanelHeight);
 
         JButton backButton = new JButton("Back");
-        backButton.setPreferredSize(new Dimension(250, 30));
+        backButton.setPreferredSize(new Dimension(400, 30));
         backButton.setBackground(Color.WHITE);
         //creatorsPanel.add(backButton, BorderLayout.NORTH);
 
-        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
+
+        //JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         backButtonPanel.add(backButton);
         creatorsPanel.add(backButtonPanel, BorderLayout.NORTH);
 

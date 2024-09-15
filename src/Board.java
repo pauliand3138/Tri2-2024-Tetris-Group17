@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
-    private final int ROW_COUNT = 20;
-    private final int COL_COUNT = 10;
+    private final int ROW_COUNT = Common.gameConfig.getFieldHeight();
+    private final int COL_COUNT = Common.gameConfig.getFieldWidth();
     private final int TETRIS_BLOCK_COUNT = 7;
     private int gridCellSize;
     private int[][] board;

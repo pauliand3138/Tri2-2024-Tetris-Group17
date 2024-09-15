@@ -93,7 +93,7 @@ public class GameConfig {
     }
 
     public void resetGameConfig() {
-        this.fieldWidth = 15;
+        this.fieldWidth = 10;
         this.fieldHeight = 20;
         this.gameLevel = 1;
         this.music = true;
