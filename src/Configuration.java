@@ -21,7 +21,7 @@ public class Configuration extends JFrame {
         titlePanel.add(titleLabel);
 
         JPanel gridPanel = new JPanel();
-        gridPanel.setLayout(new GridLayout(7, 3, 15, 0));
+        gridPanel.setLayout(new GridLayout(8, 3, 15, 0));
 
 //        JPanel buttonPanel = new JPanel();
 //        buttonPanel.setLayout(new GridLayout(2, 1, 0, 5));
@@ -107,19 +107,45 @@ public class Configuration extends JFrame {
             }
         });
 
+        JLabel p1Label = new JLabel("Player One Type:");
+        p1Label.setHorizontalAlignment(JLabel.CENTER);
+        ButtonGroup p1 = new ButtonGroup();
+        JRadioButton p1Human = new JRadioButton();
+        p1Human.setText("Human");
+        JRadioButton p1Ai = new JRadioButton();
+        p1Ai.setText("AI");
+        JRadioButton p1External = new JRadioButton();
+        p1External.setText("External");
+        p1.add(p1Human);
+        p1.add(p1Ai);
+        p1.add(p1External);
+        p1Human.setSelected(true);
+        JPanel p1Buttons = new JPanel();
+        p1Buttons.setLayout(new BoxLayout(p1Buttons, BoxLayout.X_AXIS));
+        p1Buttons.add(p1Human);
+        p1Buttons.add(p1Ai);
+        p1Buttons.add(p1External);
 
-        // AI Toggle
-        JLabel aiLabel = new JLabel("AI Play (On/Off):");
-        aiLabel.setHorizontalAlignment(JLabel.CENTER);
-        JCheckBox aiCheckBox = new JCheckBox("", false);
-        JLabel aiValue = new JLabel("Off");
-        aiValue.setFont(VALUE_FONT);
-        aiCheckBox.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                aiValue.setText(aiCheckBox.isSelected() ? "On" : "Off");
-            }
-        });
-
+        JLabel p2Label = new JLabel("Player Two Type:");
+        p2Label.setHorizontalAlignment(JLabel.CENTER);
+        ButtonGroup p2 = new ButtonGroup();
+        JRadioButton p2Human = new JRadioButton();
+        p2Human.setText("Human");
+        p2Human.setEnabled(false);
+        JRadioButton p2Ai = new JRadioButton();
+        p2Ai.setText("AI");
+        p2Ai.setEnabled(false);
+        JRadioButton p2External = new JRadioButton();
+        p2External.setText("External");
+        p2External.setEnabled(false);
+        p2.add(p2Human);
+        p2.add(p2Ai);
+        p2.add(p2External);
+        JPanel p2Buttons = new JPanel();
+        p2Buttons.setLayout(new BoxLayout(p2Buttons, BoxLayout.X_AXIS));
+        p2Buttons.add(p2Human);
+        p2Buttons.add(p2Ai);
+        p2Buttons.add(p2External);
 
         // Extend Mode Toggle
         JLabel extendLabel = new JLabel("Extend Mode (On/Off):");
@@ -130,8 +156,19 @@ public class Configuration extends JFrame {
         extendCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 extendValue.setText(extendCheckBox.isSelected() ? "On" : "Off");
+                if (!extendCheckBox.isSelected()) {
+                    p2Human.setEnabled(false);
+                    p2Ai.setEnabled(false);
+                    p2External.setEnabled(false);
+                } else {
+                    p2Human.setEnabled(true);
+                    p2Ai.setEnabled(true);
+                    p2External.setEnabled(true);
+                }
             }
         });
+
+
 
         gridPanel.add(widthLabel);
         gridPanel.add(widthSlider);
@@ -153,16 +190,18 @@ public class Configuration extends JFrame {
         gridPanel.add(soundCheckBox);
         gridPanel.add(soundValue);
 
-        gridPanel.add(aiLabel);
-        gridPanel.add(aiCheckBox);
-        gridPanel.add(aiValue);
-
         gridPanel.add(extendLabel);
         gridPanel.add(extendCheckBox);
         gridPanel.add(extendValue);
 
-//        JButton backButton = new JButton("Back");
-//
+        gridPanel.add(p1Label);
+        gridPanel.add(p1Buttons);
+        gridPanel.add(new JLabel(""));
+
+        gridPanel.add(p2Label);
+        gridPanel.add(p2Buttons);
+
+
         float titlePanelPct = 0.20F;
         float configPanelPct = 0.50F;
         float creatorsPanelPct = 1 - configPanelPct - titlePanelPct;
@@ -195,10 +234,6 @@ public class Configuration extends JFrame {
         backButtonPanel.add(backButton);
         creatorsPanel.add(backButtonPanel, BorderLayout.NORTH);
 
-//        JLabel footerLabel = new JLabel("Author: Group 17");
-//        footerLabel.setHorizontalAlignment(JLabel.CENTER);
-////        buttonPanel.add(backButton);
-////        buttonPanel.add(footerLabel);
 
         add(titlePanel, BorderLayout.NORTH);
         add(gridPanel, BorderLayout.CENTER);
