@@ -86,17 +86,23 @@ public class Play extends JFrame {
 
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                pauseGame(); // Pauses the game when back button is pressed.
+                if (!board.isGameOver) {
+                    pauseGame(); // Pauses the game when back button is pressed.
 
-                // Confirmation dialogue screen
-                int response = JOptionPane.showConfirmDialog(null, "Return to main menu?", "Confirm", JOptionPane.YES_NO_OPTION);
-                if (response == JOptionPane.YES_OPTION) {
-                    // if 'Yes'
+                    // Confirmation dialogue screen
+                    int response = JOptionPane.showConfirmDialog(null, "Return to main menu?", "Confirm", JOptionPane.YES_NO_OPTION);
+                    if (response == JOptionPane.YES_OPTION) {
+                        // if 'Yes'
+                        setVisible(false);
+                        TetrisMainScreen mainScreen = new TetrisMainScreen();
+                        mainScreen.setVisible(true);
+                    } else {
+                        resumeGame();
+                    }
+                } else {
                     setVisible(false);
                     TetrisMainScreen mainScreen = new TetrisMainScreen();
                     mainScreen.setVisible(true);
-                } else {
-                    resumeGame();
                 }
             }
         });

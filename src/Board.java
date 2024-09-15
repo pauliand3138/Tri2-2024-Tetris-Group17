@@ -24,6 +24,7 @@ public class Board extends JPanel implements ActionListener {
 
     private final Timer timer;
     public boolean isPaused; // checks if game is paused
+    public boolean isGameOver = false;
 
     public Board(int width, int height){
         initialize(width, height);
@@ -191,7 +192,7 @@ public class Board extends JPanel implements ActionListener {
 
     public void clearLines() {
         boolean completedLine;
-
+        
         for (int row = ROW_COUNT - 1; row >= 0; row--) {
             completedLine = true;
 
@@ -208,6 +209,7 @@ public class Board extends JPanel implements ActionListener {
                 clearLine(0);
                 row++;
                 repaint();
+
             }
         }
     }
@@ -297,6 +299,7 @@ public class Board extends JPanel implements ActionListener {
                     setBlockAsDroppedBlock();
                     clearLines();
                     if (isBlockOutside()) {
+                        isGameOver = true;
                         System.out.println("Game Over");
                         timer.stop();
                     } else {
