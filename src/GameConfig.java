@@ -1,3 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.*;
+
 public class GameConfig {
     private int fieldWidth;
     private int fieldHeight;
@@ -10,7 +15,6 @@ public class GameConfig {
     // playerType [0] = Human, [1] = AI, [2] = External
 
     public GameConfig() {
-
     }
 
     public GameConfig(int fieldWidth, int fieldHeight, int gameLevel, boolean music, boolean soundEffect, boolean extendMode, int playerOneType, int playerTwoType) {
@@ -89,7 +93,7 @@ public class GameConfig {
     }
 
     public void resetGameConfig() {
-        this.fieldWidth = 10;
+        this.fieldWidth = 15;
         this.fieldHeight = 20;
         this.gameLevel = 1;
         this.music = true;
@@ -99,11 +103,24 @@ public class GameConfig {
         this.playerTwoType = 0;
     }
 
-    public void readGameConfigFile() {
-
+    public GameConfig readGameConfigFile() throws FileNotFoundException {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        BufferedReader br = new BufferedReader(new FileReader("TetrisGameConfig.json"));
+        GameConfig gameConfig = gson.fromJson(br, GameConfig.class);
+        return gameConfig;
     }
 
-    public void writeGameConfigFile() {
+    public void writeGameConfigFile(GameConfig gameConfig) throws IOException {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        FileWriter fw = new FileWriter("TetrisGameConfig.json");
+        fw.write(gson.toJson(gameConfig));
+        fw.close();
+    }
 
+    @Override
+    public String toString() {
+        return "GameConfig{" + "fieldWidth=" + fieldWidth + ", fieldHeight=" + fieldHeight + ", gameLevel=" + gameLevel + ", music=" + music + ", soundEffect=" + soundEffect + ", extendMode=" + extendMode + ", playerOneType=" + playerOneType + ", playerTwoType=" + playerTwoType + '}';
     }
 }
