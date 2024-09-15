@@ -102,6 +102,8 @@ public class Play extends JFrame {
                         // if 'Yes'
                         setVisible(false);
                         TetrisMainScreen mainScreen = new TetrisMainScreen();
+                        Common.gameConfig.setFieldHeight(20);
+                        Common.gameConfig.setFieldWidth(10);
                         mainScreen.setVisible(true);
                     } else {
                         resumeGame();
@@ -109,6 +111,8 @@ public class Play extends JFrame {
                 } else {
                     setVisible(false);
                     TetrisMainScreen mainScreen = new TetrisMainScreen();
+                    Common.gameConfig.setFieldHeight(20);
+                    Common.gameConfig.setFieldWidth(10);
                     mainScreen.setVisible(true);
                 }
             }
