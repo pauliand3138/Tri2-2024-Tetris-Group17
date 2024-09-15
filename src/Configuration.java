@@ -65,7 +65,7 @@ public class Configuration extends JFrame {
 
 
         // Game Level
-        JLabel gameLevelLabel = new JLabel("Field Height (No of cells):");
+        JLabel gameLevelLabel = new JLabel("Game Level:");
         gameLevelLabel.setHorizontalAlignment(JLabel.CENTER);
         JSlider gameLevelSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
         JLabel gameLevelValue = new JLabel("" + gameLevelSlider.getValue());
@@ -141,6 +141,7 @@ public class Configuration extends JFrame {
         p2.add(p2Human);
         p2.add(p2Ai);
         p2.add(p2External);
+        p2Human.setSelected(true);
         JPanel p2Buttons = new JPanel();
         p2Buttons.setLayout(new BoxLayout(p2Buttons, BoxLayout.X_AXIS));
         p2Buttons.add(p2Human);

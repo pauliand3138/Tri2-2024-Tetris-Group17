@@ -10,6 +10,7 @@ public class Main {
         splash.displaySplash();
         SwingUtilities.invokeLater(()->{
             TetrisMainScreen mainScreen = new TetrisMainScreen();
+            Common.gameConfig = new GameConfig();
             mainScreen.setVisible(true);
         });
     }
