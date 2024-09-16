@@ -2,4 +2,5 @@
 
 public class Common {
     public static GameConfig gameConfig;
+
 }

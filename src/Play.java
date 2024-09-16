@@ -16,21 +16,17 @@ public class Play extends JFrame {
     boolean isKeyAdapterResume = false;// checks if game paused
     private JLabel pauseOverlayLabel; // Pause Overlay message
     private JLayeredPane layeredPane;
+    private JLabel musicLabel, soundLabel;
     private MusicPlayer musicPlayer = createMusicPlayer();
+    static String[] soundFiles = {"sounds/move.wav", "sounds/levelup.wav", "sounds/clearline.wav", "sounds/gameover.wav"};
+    static SoundEffectManager soundManager = new SoundEffectManager(soundFiles);
+
 
     public Play() {
         initialize();
         addElements();
         addKeybindControls();
-        //board.startGame(board); // Starts the game here
         setVisible(true);
-
-        // board focus on startup and after resuming game
-//        //board.addFocusListener(new java.awt.event.FocusAdapter() {
-//            public void focusGained(java.awt.event.FocusEvent evt) {
-//                board.requestFocusInWindow();
-//            }
-//        });
     }
 
     private void initialize() {
@@ -38,7 +34,7 @@ public class Play extends JFrame {
         setLayout(new BorderLayout());
 
         int width = max((int)(Common.gameConfig.getFieldWidth() / 10.0 * 500), 500);
-        int height = 425 + (Common.gameConfig.getFieldHeight() - 15) * 16; //Fixed formula after trial and error
+        int height = 450 + (Common.gameConfig.getFieldHeight() - 15) * 16; //Fixed formula after trial and error
         System.out.println(width);
         System.out.println(height);
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -46,10 +42,10 @@ public class Play extends JFrame {
         int x = screenSize.width / 2 - width / 2;
         int y = screenSize.height / 2 - height / 2;
         setBounds(x, y, width, height);
-
-        //isPaused = false;
-
         layeredPane = getLayeredPane(); // initializing the layered pane
+        if (!Common.gameConfig.isSoundEffect()) {
+            soundManager.close();
+        }
     }
 
     private void addElements() {
@@ -61,12 +57,31 @@ public class Play extends JFrame {
         float creatorsPanelPct = 1 - boardPanelPct - titlePanelPct;
 
         int titlePanelHeight = (int) (height * titlePanelPct);
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         JPanel titlePanel = new JPanel();
-        titlePanel.setSize(width, titlePanelHeight);
+        titlePanel.setSize(width, 0);
         JLabel titleLabel = new JLabel("Tetris");
-        titleLabel.setFont(new Font("Calibri", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Calibri", Font.BOLD, 20));
         titlePanel.add(titleLabel);
-        add(titlePanel, BorderLayout.NORTH);
+
+
+        JPanel bottomTitlePanel = new JPanel();
+        bottomTitlePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,0));
+
+        musicLabel = new JLabel(Common.gameConfig.isMusic() ? "Music: ON" : "Music: OFF");
+        soundLabel = new JLabel(Common.gameConfig.isSoundEffect() ? "Sound: ON" : "Sound: OFF");
+        bottomTitlePanel.add(musicLabel);
+        bottomTitlePanel.add(soundLabel);
+
+        topPanel.add(titlePanel);
+        topPanel.add(bottomTitlePanel);
+
+        add(topPanel, BorderLayout.NORTH);
+
+
+        JPanel soundPanel = new JPanel();
+        soundPanel.setSize(width, height);
 
         int boardPanelHeight = (int) (height * boardPanelPct);
         JPanel boardPanel = new JPanel();
@@ -105,7 +120,10 @@ public class Play extends JFrame {
                         Common.gameConfig.setFieldHeight(20);
                         Common.gameConfig.setFieldWidth(10);
                         mainScreen.setVisible(true);
-                        musicPlayer.stop();
+                        if (Common.gameConfig.isMusic()) {
+                            musicPlayer.stop();
+                        }
+
                     } else {
                         resumeGame();
                     }
@@ -115,7 +133,9 @@ public class Play extends JFrame {
                     Common.gameConfig.setFieldHeight(20);
                     Common.gameConfig.setFieldWidth(10);
                     mainScreen.setVisible(true);
-                    musicPlayer.stop();
+                    if (Common.gameConfig.isMusic()) {
+                        musicPlayer.stop();
+                    }
                 }
             }
         });
@@ -135,7 +155,6 @@ public class Play extends JFrame {
         layeredPane.add(pauseOverlayLabel, JLayeredPane.POPUP_LAYER);
         pauseOverlayLabel.setVisible(false);
 
-        //musicPlayer = createMusicPlayer();
 
     }
 
@@ -149,32 +168,45 @@ public class Play extends JFrame {
         inputMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
         inputMap.put(KeyStroke.getKeyStroke("P"), "p");
         inputMap.put(KeyStroke.getKeyStroke("M"),"m");
+        inputMap.put(KeyStroke.getKeyStroke("N"), "n");
 
         actionMap.put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused) board.moveBlockRight();
+                if (!isPlayPaused && !board.isGameOver) {
+                    board.moveBlockRight();
+                    soundManager.playSound("move.wav");
+                }
             }
         });
 
         actionMap.put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused) board.moveBlockLeft();
+                if (!isPlayPaused && !board.isGameOver) {
+                    board.moveBlockLeft();
+                    soundManager.playSound("move.wav");
+                }
             }
         });
 
         actionMap.put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused) board.rotateBlock();
+                if (!isPlayPaused && !board.isGameOver) {
+                    board.rotateBlock();
+                    soundManager.playSound("move.wav");
+                }
             }
         });
 
         actionMap.put("down", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused) board.moveBlockDown();
+                if (!isPlayPaused && !board.isGameOver) {
+                    board.moveBlockDown();
+                    soundManager.playSound("move.wav");
+                }
             }
         });
 
@@ -191,20 +223,34 @@ public class Play extends JFrame {
         });
 
         actionMap.put("m", new AbstractAction() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!musicPlayer.isPaused()) {
                     musicPlayer.pause();
                     System.out.println("Music paused!");
+                    musicLabel.setText("Music: OFF");
                 } else {
                     musicPlayer.resume();
                     System.out.println("Music resumed!");
+                    musicLabel.setText("Music: ON");
                 }
 
             }
         });
 
+        actionMap.put("n", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Common.gameConfig.isSoundEffect()) {
+                    soundManager.close();
+                } else {
+                    soundManager.loadSoundEffects(soundFiles);
+                }
+                Common.gameConfig.setSoundEffect(!Common.gameConfig.isSoundEffect());
+                soundLabel.setText(Common.gameConfig.isSoundEffect() ? "Sound: ON" : "Sound: OFF");
+
+            }
+        });
          //Listener for resuming game
         pauseOverlayLabel.addKeyListener(new KeyAdapter() {
             @Override

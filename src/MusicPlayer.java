@@ -12,7 +12,7 @@ public class MusicPlayer implements Runnable {
     private boolean repeat;
 
     public MusicPlayer() {
-        this.isPaused = false;
+        this.isPaused = !Common.gameConfig.isMusic();
         this.isStopped = false;
         this.repeat = true;
     }

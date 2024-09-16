@@ -29,14 +29,10 @@ public class Board extends JPanel implements ActionListener {
     public Board(int width, int height){
         initialize(width, height);
         setVisible(true);
-        //startGame(this);
         timer = new Timer(50, this);
         timer.start();
     }
 
-//    public void startGame(Board board) {
-//        new TetrisThread(board).start();
-//    }
 
     private void initialize(int width, int height){
         board = new int[ROW_COUNT][COL_COUNT];
@@ -209,7 +205,7 @@ public class Board extends JPanel implements ActionListener {
                 clearLine(0);
                 row++;
                 repaint();
-
+                Play.soundManager.playSound("clearline.wav");
             }
         }
     }
@@ -302,6 +298,13 @@ public class Board extends JPanel implements ActionListener {
                         isGameOver = true;
                         System.out.println("Game Over");
                         timer.stop();
+                        Play.soundManager.playSound("gameover.wav");
+                        try {
+                            Thread.sleep(2500);
+                        } catch (InterruptedException e1) {
+
+                            Play.soundManager.close();
+                        }
                     } else {
                         createTetrisBlock();
                     }
