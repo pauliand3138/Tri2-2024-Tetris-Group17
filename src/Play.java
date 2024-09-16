@@ -16,6 +16,7 @@ public class Play extends JFrame {
     boolean isKeyAdapterResume = false;// checks if game paused
     private JLabel pauseOverlayLabel; // Pause Overlay message
     private JLayeredPane layeredPane;
+    private MusicPlayer musicPlayer = createMusicPlayer();
 
     public Play() {
         initialize();
@@ -85,7 +86,6 @@ public class Play extends JFrame {
         backButton.setBackground(Color.WHITE);
         //creatorsPanel.add(backButton, BorderLayout.NORTH);
 
-
         //JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         backButtonPanel.add(backButton);
@@ -105,6 +105,7 @@ public class Play extends JFrame {
                         Common.gameConfig.setFieldHeight(20);
                         Common.gameConfig.setFieldWidth(10);
                         mainScreen.setVisible(true);
+                        musicPlayer.stop();
                     } else {
                         resumeGame();
                     }
@@ -114,6 +115,7 @@ public class Play extends JFrame {
                     Common.gameConfig.setFieldHeight(20);
                     Common.gameConfig.setFieldWidth(10);
                     mainScreen.setVisible(true);
+                    musicPlayer.stop();
                 }
             }
         });
@@ -125,12 +127,6 @@ public class Play extends JFrame {
 
         add(creatorsPanel, BorderLayout.SOUTH);
 
-        //JLabel creatorsLabel = new JLabel("Creators: Paul Ian Lim, Karan Singde, Darcy McIntosh, Janet Chimwayange, and Kacey Boyle", SwingConstants.CENTER);
-        //creatorsLabel.setFont(new Font("Calibri", Font.PLAIN, 12));
-        //creatorsPanel.add(creatorsLabel, BorderLayout.SOUTH);
-
-        //add(creatorsPanel, BorderLayout.SOUTH);
-
         // Without activating, initialize pause overlay
         pauseOverlayLabel = new JLabel("Press P to continue the game", SwingConstants.CENTER);
         pauseOverlayLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -138,6 +134,9 @@ public class Play extends JFrame {
         pauseOverlayLabel.setBounds(0, boardPanelHeight / 2 - 20, width, 40); // Center position
         layeredPane.add(pauseOverlayLabel, JLayeredPane.POPUP_LAYER);
         pauseOverlayLabel.setVisible(false);
+
+        //musicPlayer = createMusicPlayer();
+
     }
 
     private void addKeybindControls() {
@@ -149,6 +148,7 @@ public class Play extends JFrame {
         inputMap.put(KeyStroke.getKeyStroke("UP"), "up");
         inputMap.put(KeyStroke.getKeyStroke("DOWN"), "down");
         inputMap.put(KeyStroke.getKeyStroke("P"), "p");
+        inputMap.put(KeyStroke.getKeyStroke("M"),"m");
 
         actionMap.put("right", new AbstractAction() {
             @Override
@@ -187,17 +187,21 @@ public class Play extends JFrame {
                 } else {
                     pauseGame();
                 }
-//                if (board.isPaused) resumeGame();
-//                if (!board.isPaused) pauseGame();
-//                if (isPlayPaused) resumeGame();
-//
-//                if (!isPlayPaused && !pauseOverlayLabel.isVisible()) {
-//                    System.out.println("Paused!");
-//                    pauseGame();
-//                    return;
-//                }
-//                System.out.println(isPaused);
-//                System.out.println(pauseOverlayLabel.isVisible());
+            }
+        });
+
+        actionMap.put("m", new AbstractAction() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!musicPlayer.isPaused()) {
+                    musicPlayer.pause();
+                    System.out.println("Music paused!");
+                } else {
+                    musicPlayer.resume();
+                    System.out.println("Music resumed!");
+                }
+
             }
         });
 
@@ -212,7 +216,6 @@ public class Play extends JFrame {
                 }
             }
         });
-
         //pauseOverlayLabel.setFocusable(true); // Pause overlay is focused and is able to detect key presses
     }
 
@@ -235,5 +238,12 @@ public class Play extends JFrame {
         layeredPane.moveToFront(board); // moves overlay to back
         board.resumeGame();
         requestFocusInWindow(); // board focused to capture key movements
+    }
+
+    private MusicPlayer createMusicPlayer() {
+        MusicPlayer musicPlayer = new MusicPlayer();
+        Thread musicThread = new Thread(musicPlayer);
+        musicThread.start();
+        return musicPlayer;
     }
 }
