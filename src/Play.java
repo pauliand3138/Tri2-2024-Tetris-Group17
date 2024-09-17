@@ -120,7 +120,7 @@ public class Play extends JFrame {
                         Common.gameConfig.setFieldHeight(20);
                         Common.gameConfig.setFieldWidth(10);
                         mainScreen.setVisible(true);
-                        if (Common.gameConfig.isMusic()) {
+                        if (!musicPlayer.isPaused()) {
                             musicPlayer.stop();
                         }
 
@@ -133,7 +133,7 @@ public class Play extends JFrame {
                     Common.gameConfig.setFieldHeight(20);
                     Common.gameConfig.setFieldWidth(10);
                     mainScreen.setVisible(true);
-                    if (Common.gameConfig.isMusic()) {
+                    if (!musicPlayer.isPaused()) {
                         musicPlayer.stop();
                     }
                 }
