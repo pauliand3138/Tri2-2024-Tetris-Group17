@@ -69,8 +69,8 @@ public class Play extends JFrame {
         JPanel bottomTitlePanel = new JPanel();
         bottomTitlePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,0));
 
-        musicLabel = new JLabel(Common.gameConfig.isMusic() ? "Music: ON" : "Music: OFF");
-        soundLabel = new JLabel(Common.gameConfig.isSoundEffect() ? "Sound: ON" : "Sound: OFF");
+        musicLabel = new JLabel(Common.gameConfig.isMusic() ? "Music(M): ON" : "Music(M): OFF");
+        soundLabel = new JLabel(Common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
         bottomTitlePanel.add(musicLabel);
         bottomTitlePanel.add(soundLabel);
 
@@ -228,11 +228,11 @@ public class Play extends JFrame {
                 if (!musicPlayer.isPaused()) {
                     musicPlayer.pause();
                     System.out.println("Music paused!");
-                    musicLabel.setText("Music: OFF");
+                    musicLabel.setText("Music(M): OFF");
                 } else {
                     musicPlayer.resume();
                     System.out.println("Music resumed!");
-                    musicLabel.setText("Music: ON");
+                    musicLabel.setText("Music(M): ON");
                 }
 
             }
@@ -247,7 +247,7 @@ public class Play extends JFrame {
                     soundManager.loadSoundEffects(soundFiles);
                 }
                 Common.gameConfig.setSoundEffect(!Common.gameConfig.isSoundEffect());
-                soundLabel.setText(Common.gameConfig.isSoundEffect() ? "Sound: ON" : "Sound: OFF");
+                soundLabel.setText(Common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
 
             }
         });
