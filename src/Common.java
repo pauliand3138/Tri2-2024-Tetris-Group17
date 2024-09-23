@@ -2,5 +2,5 @@
 
 public class Common {
     public static GameConfig gameConfig;
-
+    public static long gameSeed;
 }

@@ -27,7 +27,7 @@ public class SoundEffectManager {
         }
     }
 
-    public void playSound(final String soundName) {
+    public synchronized void playSound(final String soundName) {
         Clip clip = soundEffects.get(soundName);
         if (clip != null) {
             new Thread(() -> {
@@ -39,9 +39,11 @@ public class SoundEffectManager {
         }
     }
 
-    public void close() {
+    public synchronized void close() {
         for (Clip clip : soundEffects.values()) {
-            clip.close();
+            if (!clip.isRunning()) {
+                clip.close();
+            }
         }
     }
 }

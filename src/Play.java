@@ -10,8 +10,8 @@ import static java.lang.Math.min;
 import static java.util.Collections.min;
 
 public class Play extends JFrame {
-
-    private Board board;
+    private static Board[] board = {null, null};
+    public  GameInfoPanel[] gameInfoPanel = {null, null};
     boolean isPlayPaused = false;
     boolean isKeyAdapterResume = false;// checks if game paused
     private JLabel pauseOverlayLabel; // Pause Overlay message
@@ -23,6 +23,8 @@ public class Play extends JFrame {
 
 
     public Play() {
+        // For generating random tetris block
+        Common.gameSeed = System.currentTimeMillis();
         initialize();
         addElements();
         addKeybindControls();
@@ -33,10 +35,14 @@ public class Play extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        int width = max((int)(Common.gameConfig.getFieldWidth() / 10.0 * 500), 500);
+        int width;
+        if (Common.gameConfig.isExtendMode()) {
+            width = ((365 + (Common.gameConfig.getFieldWidth() - 5) * 17) * 2);
+        } else {
+            width = 365 + (Common.gameConfig.getFieldWidth() - 5) * 17;
+        }
         int height = 450 + (Common.gameConfig.getFieldHeight() - 15) * 16; //Fixed formula after trial and error
-        System.out.println(width);
-        System.out.println(height);
+
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
         int x = screenSize.width / 2 - width / 2;
@@ -79,16 +85,67 @@ public class Play extends JFrame {
 
         add(topPanel, BorderLayout.NORTH);
 
-
         JPanel soundPanel = new JPanel();
         soundPanel.setSize(width, height);
 
+        int playerCount = Common.gameConfig.isExtendMode() ? 2 : 1;
+
         int boardPanelHeight = (int) (height * boardPanelPct);
         JPanel boardPanel = new JPanel();
-        boardPanel.setLayout(null);
-        boardPanel.setSize(width, boardPanelHeight);
-        board = new Board(width, boardPanelHeight);
-        boardPanel.add(board);
+        boardPanel.setLayout(new GridLayout(1, playerCount));
+
+        for (int i = 0; i < playerCount; i++) {
+            JPanel outerPane = new JPanel();
+            outerPane.setLayout(new GridLayout(1, 2));
+            JPanel innerPanel = new JPanel(new BorderLayout());
+            int playerType = i == 0 ? Common.gameConfig.getPlayerOneType() : Common.gameConfig.getPlayerTwoType();
+            gameInfoPanel[i] = new GameInfoPanel(i + 1, playerType);
+            //gameInfoPanel = new GameInfoPanel(i + 1);
+            JPanel tetrisBoardPanel = new JPanel();
+            tetrisBoardPanel.setLayout(null);
+            board[i] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
+            tetrisBoardPanel.add(board[i]);
+            innerPanel.add(gameInfoPanel[i], BorderLayout.WEST);
+            innerPanel.add(tetrisBoardPanel, BorderLayout.CENTER);
+            outerPane.add(innerPanel);
+            boardPanel.add(outerPane);
+        }
+//        JPanel flowPane = new JPanel(); // Panel in each grid
+//        JPanel flowPane2 = new JPanel();
+//        flowPane.setLayout(new GridLayout(1, 2, 0, 0));
+//        flowPane2.setLayout(new GridLayout(1, 2, 0, 0));
+//
+//        JPanel jp = new JPanel(new BorderLayout()); // Panel inside jp
+//        JPanel jp2 = new JPanel(new BorderLayout());
+//        gameInfoPanel = new GameInfoPanel(1);
+//        gameInfoPanel2 = new GameInfoPanel(2);
+//
+//        JPanel firstBoardPanel = new JPanel();
+//        firstBoardPanel.setLayout(null);
+//        //boardPanel.setLayout(null);
+//        //boardPanel.setSize(width, boardPanelHeight);
+//        board[0] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight);
+//        firstBoardPanel.add(board[0]);
+//
+//        JPanel secondBoardPanel = new JPanel();
+//        secondBoardPanel.setLayout(null);
+//        board[1] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight);
+//        secondBoardPanel.add(board[1]);
+//
+//        jp.add(gameInfoPanel, BorderLayout.WEST);
+//        jp.add(firstBoardPanel, BorderLayout.CENTER);
+//        flowPane.add(jp);
+//
+//        jp2.add(gameInfoPanel2, BorderLayout.WEST);
+//        jp2.add(secondBoardPanel, BorderLayout.CENTER);
+//        flowPane2.add(jp2);
+//
+//        boardPanel.add(flowPane);
+//        boardPanel.add(flowPane2);
+        //boardPanel.add(jp);
+        //boardPanel.add(firstBoardPanel);
+
+        //boardPanel.add(secondBoardPanel);
         add(boardPanel, BorderLayout.CENTER);
 
         int creatorsPanelHeight = (int) (height * creatorsPanelPct);
@@ -101,16 +158,15 @@ public class Play extends JFrame {
         backButton.setBackground(Color.WHITE);
         //creatorsPanel.add(backButton, BorderLayout.NORTH);
 
-        //JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
+        // Moving up back button slightly
         JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10));
         backButtonPanel.add(backButton);
         creatorsPanel.add(backButtonPanel, BorderLayout.NORTH);
 
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!board.isGameOver) {
+                if (!isAllGameEnded()) {
                     pauseGame(); // Pauses the game when back button is pressed.
-
                     // Confirmation dialogue screen
                     int response = JOptionPane.showConfirmDialog(null, "Return to main menu?", "Confirm", JOptionPane.YES_NO_OPTION);
                     if (response == JOptionPane.YES_OPTION) {
@@ -120,6 +176,11 @@ public class Play extends JFrame {
                         Common.gameConfig.setFieldHeight(20);
                         Common.gameConfig.setFieldWidth(10);
                         mainScreen.setVisible(true);
+                        for (Board game : board) {
+                            if (game != null) {
+                                game.isBoardActive = false;
+                            }
+                        }
                         if (!musicPlayer.isPaused()) {
                             musicPlayer.stop();
                         }
@@ -154,8 +215,6 @@ public class Play extends JFrame {
         pauseOverlayLabel.setBounds(0, boardPanelHeight / 2 - 20, width, 40); // Center position
         layeredPane.add(pauseOverlayLabel, JLayeredPane.POPUP_LAYER);
         pauseOverlayLabel.setVisible(false);
-
-
     }
 
     private void addKeybindControls() {
@@ -169,13 +228,16 @@ public class Play extends JFrame {
         inputMap.put(KeyStroke.getKeyStroke("P"), "p");
         inputMap.put(KeyStroke.getKeyStroke("M"),"m");
         inputMap.put(KeyStroke.getKeyStroke("N"), "n");
+        inputMap.put(KeyStroke.getKeyStroke("W"), "w");
+        inputMap.put(KeyStroke.getKeyStroke("S"), "s");
+        inputMap.put(KeyStroke.getKeyStroke("A"), "a");
+        inputMap.put(KeyStroke.getKeyStroke("D"), "d");
 
         actionMap.put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board.isGameOver) {
-                    board.moveBlockRight();
-                    soundManager.playSound("move.wav");
+                if (!isPlayPaused && !board[0].isGameOver) {
+                    board[0].moveBlockRight();
                 }
             }
         });
@@ -183,9 +245,8 @@ public class Play extends JFrame {
         actionMap.put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board.isGameOver) {
-                    board.moveBlockLeft();
-                    soundManager.playSound("move.wav");
+                if (!isPlayPaused && !board[0].isGameOver) {
+                    board[0].moveBlockLeft();
                 }
             }
         });
@@ -193,9 +254,8 @@ public class Play extends JFrame {
         actionMap.put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board.isGameOver) {
-                    board.rotateBlock();
-                    soundManager.playSound("move.wav");
+                if (!isPlayPaused && !board[0].isGameOver) {
+                    board[0].rotateBlock();
                 }
             }
         });
@@ -203,9 +263,44 @@ public class Play extends JFrame {
         actionMap.put("down", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board.isGameOver) {
-                    board.moveBlockDown();
-                    soundManager.playSound("move.wav");
+                if (!isPlayPaused && !board[0].isGameOver) {
+                    board[0].moveBlockDown();
+                }
+            }
+        });
+
+        actionMap.put("w", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!isPlayPaused && !board[1].isGameOver) {
+                    board[1].rotateBlock();
+                }
+            }
+        });
+
+        actionMap.put("s", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!isPlayPaused && !board[1].isGameOver) {
+                    board[1].moveBlockDown();
+                }
+            }
+        });
+
+        actionMap.put("a", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!isPlayPaused && !board[1].isGameOver) {
+                    board[1].moveBlockLeft();
+                }
+            }
+        });
+
+        actionMap.put("d", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!isPlayPaused && !board[1].isGameOver) {
+                    board[1].moveBlockRight();
                 }
             }
         });
@@ -234,7 +329,6 @@ public class Play extends JFrame {
                     System.out.println("Music resumed!");
                     musicLabel.setText("Music(M): ON");
                 }
-
             }
         });
 
@@ -251,7 +345,7 @@ public class Play extends JFrame {
 
             }
         });
-         //Listener for resuming game
+        //Listener for resuming game
         pauseOverlayLabel.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -274,15 +368,20 @@ public class Play extends JFrame {
 
     private void pauseGame() {
         isPlayPaused = true; // Game is paused
-        board.pauseGame();
+        for(int i = 0; i < board.length; i++) {
+            if (board[i] != null) {
+                board[i].pauseGame();
+            }
+        }
         showPauseOverlay();
     }
 
     private void resumeGame() {
         isPlayPaused = false; // game resumed
         pauseOverlayLabel.setVisible(false); // hides the overlay
-        layeredPane.moveToFront(board); // moves overlay to back
-        board.resumeGame();
+        layeredPane.moveToFront(board[0]); // moves overlay to back
+        board[0].resumeGame();
+        board[1].resumeGame();
         requestFocusInWindow(); // board focused to capture key movements
     }
 
@@ -291,5 +390,17 @@ public class Play extends JFrame {
         Thread musicThread = new Thread(musicPlayer);
         musicThread.start();
         return musicPlayer;
+    }
+
+    public static boolean isAllGameEnded() {
+        boolean isEnded = true;
+        for(int i = 0; i < board.length; i++) {
+            if (board[i] != null) {
+                if(!board[i].isGameOver) {
+                    isEnded = false;
+                }
+            }
+        }
+        return isEnded;
     }
 }

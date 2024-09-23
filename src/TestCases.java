@@ -20,7 +20,7 @@ public class TestCases {
         );
 
         //initializing prior to test case
-        board = new Board(300, 600);
+        board = new Board(300, 600, 0, new GameInfoPanel(0, 0));
         board.initializeBlockForTest();
     }
 

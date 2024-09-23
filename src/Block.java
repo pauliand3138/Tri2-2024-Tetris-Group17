@@ -18,8 +18,11 @@ public class Block {
     }
     public void setX(int x){this.x = x;}
     public void setY(double y){this.y = y;}
-    public void moveDownNaturally() {
-        y+=0.05;
+    public void setBlockInfo(BlockInfo blockInfo) {
+        this.blockInfo = blockInfo;
+    }
+    public void moveDownNaturally(int level) {
+        y+=(0.05 * level);
     } //Animation purpose
     public void moveDown() {
         y++;
@@ -31,11 +34,19 @@ public class Block {
         x++;
     }
     public void rotate() {
-        System.out.println(blockInfo.getCurrentRotation());
+        //System.out.println(blockInfo.getCurrentRotation());
         blockInfo.setCurrentRotation(blockInfo.getCurrentRotation() + 1);
         if (blockInfo.getCurrentRotation() > 3) { blockInfo.setCurrentRotation(0); }
         blockInfo.setShape(blockInfo.getShapes()[blockInfo.getCurrentRotation()]);
-        System.out.println(blockInfo.getCurrentRotation());
+        //System.out.println(blockInfo.getCurrentRotation());
 
+    }
+    //    public Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
+    public Block(Block block) {
+        this.x = block.getX();
+        this.y = block.getY();
+        this.blockInfo = block.getBlockInfo();
     }
 }
