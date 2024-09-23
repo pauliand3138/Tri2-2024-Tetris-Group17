@@ -179,7 +179,6 @@ public class Board extends JPanel implements ActionListener {
         if ((int)(block.getBlockInfo().getRows() + block.getY()) == ROW_COUNT) {
             return true;
         }
-
         int[][] shape = block.getBlockInfo().getShape();
         int width = block.getBlockInfo().getColumns();
         int height = block.getBlockInfo().getRows();
