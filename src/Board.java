@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -26,11 +27,23 @@ public class Board extends JPanel implements ActionListener {
     public boolean isPaused; // checks if game is paused
     public boolean isGameOver = false;
 
+    private ExternalPlayerController externalPlayerController;
+
     public Board(int width, int height){
         initialize(width, height);
         setVisible(true);
         timer = new Timer(50, this);
         timer.start();
+
+        // Initializing external player controller for external player mode
+        if (Common.gameConfig.getPlayerOneType() == 2) { // External Player
+            try {
+                externalPlayerController = new ExternalPlayerController("localhost", 3000);
+            } catch (IOException e) {
+                System.out.println("Failed to connect to external player.");
+                isPaused = true; // Pausing the game if connection fails
+            }
+        }
     }
 
 
@@ -313,9 +326,45 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
+    private void processCommand(String command) {
+        switch (command) {
+            case "MOVE_LEFT":
+                moveBlockLeft();
+                break;
+            case "MOVE_RIGHT":
+                moveBlockRight();
+                break;
+            case "ROTATE":
+                rotateBlock();
+                break;
+            case "DROP":
+                moveBlockDown();
+                break;
+            default:
+                System.out.println("Unknown command " + command);
+                break;
+        }
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public int getROW_COUNT() {
+        return ROW_COUNT;
+    }
+
+    public int getCOL_COUNT() {
+        return COL_COUNT;
+    }
+
     public void pauseGame() {
         isPaused = true;
         timer.stop();
+    }
+
+    public void initializeBlockForTest() {
+        createTetrisBlock();
     }
 
     public void resumeGame() {
