@@ -34,16 +34,11 @@ public class Block {
         x++;
     }
     public void rotate() {
-        //System.out.println(blockInfo.getCurrentRotation());
         blockInfo.setCurrentRotation(blockInfo.getCurrentRotation() + 1);
         if (blockInfo.getCurrentRotation() > 3) { blockInfo.setCurrentRotation(0); }
         blockInfo.setShape(blockInfo.getShapes()[blockInfo.getCurrentRotation()]);
-        //System.out.println(blockInfo.getCurrentRotation());
-
     }
-    //    public Object clone() throws CloneNotSupportedException {
-//        return super.clone();
-//    }
+
     public Block(Block block) {
         this.x = block.getX();
         this.y = block.getY();

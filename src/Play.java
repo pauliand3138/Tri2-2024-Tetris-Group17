@@ -20,15 +20,21 @@ public class Play extends JFrame {
     private MusicPlayer musicPlayer = createMusicPlayer();
     static String[] soundFiles = {"sounds/move.wav", "sounds/levelup.wav", "sounds/clearline.wav", "sounds/gameover.wav"};
     static SoundEffectManager soundManager = new SoundEffectManager(soundFiles);
-
+    public static boolean isConnectionError = false;
 
     public Play() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // For generating random tetris block
         Common.gameSeed = System.currentTimeMillis();
         initialize();
         addElements();
         addKeybindControls();
         setVisible(true);
+
+        if (isConnectionError) {
+                JOptionPane.showMessageDialog(new JFrame(), "You need to start TetrisServer to use external player mode.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void initialize() {
@@ -71,7 +77,6 @@ public class Play extends JFrame {
         titleLabel.setFont(new Font("Calibri", Font.BOLD, 20));
         titlePanel.add(titleLabel);
 
-
         JPanel bottomTitlePanel = new JPanel();
         bottomTitlePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,0));
 
@@ -100,7 +105,6 @@ public class Play extends JFrame {
             JPanel innerPanel = new JPanel(new BorderLayout());
             int playerType = i == 0 ? Common.gameConfig.getPlayerOneType() : Common.gameConfig.getPlayerTwoType();
             gameInfoPanel[i] = new GameInfoPanel(i + 1, playerType);
-            //gameInfoPanel = new GameInfoPanel(i + 1);
             JPanel tetrisBoardPanel = new JPanel();
             tetrisBoardPanel.setLayout(null);
             board[i] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
@@ -110,42 +114,7 @@ public class Play extends JFrame {
             outerPane.add(innerPanel);
             boardPanel.add(outerPane);
         }
-//        JPanel flowPane = new JPanel(); // Panel in each grid
-//        JPanel flowPane2 = new JPanel();
-//        flowPane.setLayout(new GridLayout(1, 2, 0, 0));
-//        flowPane2.setLayout(new GridLayout(1, 2, 0, 0));
-//
-//        JPanel jp = new JPanel(new BorderLayout()); // Panel inside jp
-//        JPanel jp2 = new JPanel(new BorderLayout());
-//        gameInfoPanel = new GameInfoPanel(1);
-//        gameInfoPanel2 = new GameInfoPanel(2);
-//
-//        JPanel firstBoardPanel = new JPanel();
-//        firstBoardPanel.setLayout(null);
-//        //boardPanel.setLayout(null);
-//        //boardPanel.setSize(width, boardPanelHeight);
-//        board[0] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight);
-//        firstBoardPanel.add(board[0]);
-//
-//        JPanel secondBoardPanel = new JPanel();
-//        secondBoardPanel.setLayout(null);
-//        board[1] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight);
-//        secondBoardPanel.add(board[1]);
-//
-//        jp.add(gameInfoPanel, BorderLayout.WEST);
-//        jp.add(firstBoardPanel, BorderLayout.CENTER);
-//        flowPane.add(jp);
-//
-//        jp2.add(gameInfoPanel2, BorderLayout.WEST);
-//        jp2.add(secondBoardPanel, BorderLayout.CENTER);
-//        flowPane2.add(jp2);
-//
-//        boardPanel.add(flowPane);
-//        boardPanel.add(flowPane2);
-        //boardPanel.add(jp);
-        //boardPanel.add(firstBoardPanel);
 
-        //boardPanel.add(secondBoardPanel);
         add(boardPanel, BorderLayout.CENTER);
 
         int creatorsPanelHeight = (int) (height * creatorsPanelPct);
@@ -380,8 +349,11 @@ public class Play extends JFrame {
         isPlayPaused = false; // game resumed
         pauseOverlayLabel.setVisible(false); // hides the overlay
         layeredPane.moveToFront(board[0]); // moves overlay to back
-        board[0].resumeGame();
-        board[1].resumeGame();
+        for(int i = 0; i < board.length; i++) {
+            if (board[i] != null) {
+                board[i].resumeGame();
+            }
+        }
         requestFocusInWindow(); // board focused to capture key movements
     }
 

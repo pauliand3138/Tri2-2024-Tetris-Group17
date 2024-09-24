@@ -1,8 +1,14 @@
+import com.google.gson.Gson;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -27,15 +33,25 @@ public class Board extends JPanel implements ActionListener {
     private final int playerNum;
     private Timer timer = null;
     private Timer AIdownTimer = null;
+    private Timer ExternalPlayerTimer = null;
     public boolean isPaused; // checks if game is paused
     public boolean isGameOver = false;
     public boolean isAI = false;
+    public boolean isExternalPlayer = false;
     public BoardEvaluator evaluator = new BoardEvaluator();
     private long currentBlockSeed = Common.gameSeed;
     private GameInfoPanel gameInfoPanel;
     private GameInfo gameInfo;
+    private final PureGame pureGame = new PureGame(Common.gameConfig.getFieldHeight(), Common.gameConfig.getFieldWidth());
+    private OpMove externalMove;
 
-    private ExternalPlayerController externalPlayerController;
+    public ExternalPlayerController externalPlayerController;
+
+    private Socket socket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private OpMove move;
+
 
     public Board(int width, int height, int playerNum, GameInfoPanel gameInfoPanel){
         this.playerNum = playerNum;
@@ -44,16 +60,6 @@ public class Board extends JPanel implements ActionListener {
         setVisible(true);
         timer = new Timer(50, this);
         timer.start();
-
-        // Initializing external player controller for external player mode
-        if (Common.gameConfig.getPlayerOneType() == 2) { // External Player
-            try {
-                externalPlayerController = new ExternalPlayerController("localhost", 3000);
-            } catch (IOException e) {
-                System.out.println("Failed to connect to external player.");
-                isPaused = true; // Pausing the game if connection fails
-            }
-        }
     }
 
 
@@ -71,8 +77,19 @@ public class Board extends JPanel implements ActionListener {
         int playerType = playerNum == 0 ? Common.gameConfig.getPlayerOneType() : Common.gameConfig.getPlayerTwoType();
         gameInfo = gameInfoPanel.getGameInfo();
         isAI = gameInfo.getPlayerType() == 1;
+        isExternalPlayer = gameInfo.getPlayerType() == 2;
         if (isAI)
             moveBlockDownAI();
+        if (isExternalPlayer) {
+            externalPlayerController = new ExternalPlayerController("localhost", 3000);
+            try {
+                moveBlockExternalPlayer();
+            } catch (IOException e) {
+                System.out.println("Failed to connect to external player.");
+                Play.isConnectionError = true;
+                //throw new RuntimeException(e);
+            }
+        }
     }
 
     private void createTetrisBlock(){
@@ -292,6 +309,7 @@ public class Board extends JPanel implements ActionListener {
             for (int col = 0; col < width; col++) {
                 if (shape[row][col] == 1 && row + y >= 0 && col + x >= 0 ) {
                     droppedBlocks[row + y][col + x] = color;
+                    //board[row + y][col + x] = 1;
                 }
             }
         }
@@ -319,10 +337,13 @@ public class Board extends JPanel implements ActionListener {
             for (int col = 0; col < COL_COUNT; col++) {
                 color = droppedBlocks[row][col];
                 if (color != null) {
+                    board[row][col] = 1;
                     int x = col * gridCellSize;
                     double y = row * gridCellSize;
                     g.setColor(color);
                     g.fillRect(x, (int)y, gridCellSize, gridCellSize);
+                } else {
+                    board[row][col] = 0;
                 }
             }
         }
@@ -350,14 +371,22 @@ public class Board extends JPanel implements ActionListener {
                     timer = null;
                     if (isAI) {
                         AIdownTimer.stop();
+                        AIdownTimer = null;
+                    }
+                    if (isExternalPlayer) {
+                        ExternalPlayerTimer.stop();
+                        ExternalPlayerTimer = null;
                     }
                 }
             } else {
                 setBlockAsDroppedBlock();
                 clearLines();
+                updateBoardArray();
                 if (isBlockOutside()) {
                     if (isAI)
                         AIdownTimer.stop();
+                    if (isExternalPlayer)
+                        ExternalPlayerTimer.stop();
                     isGameOver = true;
                     System.out.println("Game Over");
                     timer.stop();
@@ -373,36 +402,24 @@ public class Board extends JPanel implements ActionListener {
                 } else {
                     if (isAI && AIdownTimer.isRunning())
                         AIdownTimer.stop();
+                    if (isExternalPlayer && ExternalPlayerTimer != null && ExternalPlayerTimer.isRunning())
+                        ExternalPlayerTimer.stop();
                     currentBlockSeed++;
                     createTetrisBlock();
-
                     if (isAI)
                         moveBlockDownAI();
+                    if (isExternalPlayer) {
+                        try {
+                            moveBlockExternalPlayer();
+                        } catch (IOException ex) {
+                            System.out.println("No connection to external player after block drop.");
+                        }
+                    }
                 }
             }
             repaint();
         }
 
-    }
-
-    private void processCommand(String command) {
-        switch (command) {
-            case "MOVE_LEFT":
-                moveBlockLeft();
-                break;
-            case "MOVE_RIGHT":
-                moveBlockRight();
-                break;
-            case "ROTATE":
-                rotateBlock();
-                break;
-            case "DROP":
-                moveBlockDown();
-                break;
-            default:
-                System.out.println("Unknown command " + command);
-                break;
-        }
     }
 
     public Block getBlock() {
@@ -431,6 +448,17 @@ public class Board extends JPanel implements ActionListener {
         timer.start();
     }
 
+    public void updateBoardArray() {
+        for(int row = 0; row < ROW_COUNT; row++) {
+            for(int col = 0; col < COL_COUNT; col++) {
+                if (droppedBlocks[row][col] != null) {
+                    board[row][col] = 1;
+                } else {
+                    board[row][col] = 0;
+                }
+            }
+        }
+    }
     // AI Code
     public Move findBestMove(Color[][] board, Block block) {
         Move bestMove = null;
@@ -558,4 +586,73 @@ public class Board extends JPanel implements ActionListener {
         });
         AIdownTimer.start();
     }
+
+    public void moveBlockExternalPlayer() throws IOException {
+        externalPlayerController.establishConnection();
+
+        PureGame game = new PureGame(Common.gameConfig.getFieldHeight(), Common.gameConfig.getFieldWidth());
+        game.setCells(board);
+        game.setCurrentShape(block.getBlockInfo().getShape());
+        game.setNextShape(nextBlock.getBlockInfo().getShape());
+        //System.out.println(pureGame);
+
+        OpMove externalMove = externalPlayerController.getNewMove(game);
+
+        int opX = externalMove.getOpX();
+        int opRotate = externalMove.getOpRotate();
+
+        if (opX == -1 || opRotate == -1) {
+            isGameOver = true;
+            return;
+        }
+
+//
+//        while (block.getX() < opX) {
+//            block.moveRight();
+//        }
+//
+//        while (block.getX() > opX) {
+//            block.moveLeft();
+//        }
+//
+//        while (opRotate > 0) {
+//            block.rotate();
+//            opRotate--;
+//        }
+
+
+        final int[] opRotateRef = {opRotate};
+        ExternalPlayerTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!isGameOver) {
+                    if (block != null) {
+                        if (opRotateRef[0] > 0) {
+                            block.rotate();
+                            opRotateRef[0]--;
+                            Play.soundManager.playSound("move.wav");
+                        } else if (block.getX() < opX) {
+                            block.moveRight();
+                            Play.soundManager.playSound("move.wav");
+                        } else if (block.getX() > opX) {
+                            block.moveLeft();
+                            Play.soundManager.playSound("move.wav");
+                        } else {
+                            moveBlockDown();
+                        }
+                    }
+                } else {
+                    ExternalPlayerTimer.stop();
+                }
+
+//                if (block != null || !isGameOver) {
+//                    moveBlockDown();
+//                } else {
+//                    ExternalPlayerTimer.stop();
+//                }
+            }
+        });
+        ExternalPlayerTimer.start();
+    }
+
 }
