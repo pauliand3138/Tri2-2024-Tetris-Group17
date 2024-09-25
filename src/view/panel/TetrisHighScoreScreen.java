@@ -128,7 +128,7 @@ public class TetrisHighScoreScreen extends JFrame {
         if(playerCount != MAX_PLAYERS){
             // If there aren't enough players fill the remaining with dummy info
             for(int i = 0; i < MAX_PLAYERS - playerCount ; i++){
-                playersList.add(new PlayerScore("----", 0, "----"));
+                playersList.add(new PlayerScore("----", 0, 0));
             }
         }
         return playersList;
@@ -165,7 +165,7 @@ public class TetrisHighScoreScreen extends JFrame {
             playerScoreLabels.add(new JLabel("(" + playerNumber + ") "));
             playerScoreLabels.add(new JLabel(playerScore.name()));
             playerScoreLabels.add(new JLabel(String.valueOf(playerScore.score())));
-            playerScoreLabels.add(new JLabel(playerScore.config()));
+            playerScoreLabels.add(new JLabel(String.valueOf(playerScore.config())));
             playerNumber++;
         }
 
@@ -181,11 +181,11 @@ public class TetrisHighScoreScreen extends JFrame {
             FileWriter fileWriter = new FileWriter("leaderboard.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             ArrayList<PlayerScore> players = new ArrayList<>();
-            String[] configTypes = {"Human", "AI"};
+
             for(int i = 1 ; i <= 10 ; i++){
                 Random random = new Random();
-                int configIndex = random.nextInt(configTypes.length);
-                PlayerScore player = new PlayerScore("Player " + i, (int) (Math.random() * 100), configTypes[configIndex]);
+
+                PlayerScore player = new PlayerScore("Player " + i, (int) (Math.random() * 100), 0);
                 players.add(player);
             }
             bufferedWriter.write(gson.toJson(players));
@@ -207,16 +207,6 @@ public class TetrisHighScoreScreen extends JFrame {
 
     private static void centerJLabel(JLabel label) {
         label.setHorizontalAlignment(JLabel.CENTER);
-    }
-}
-
-record PlayerScore(String name, int score, String config) {
-
-    @Override
-    public String toString() {
-        return "view.panel.PlayerScore[" +
-                "name=" + name + ", " +
-                "score=" + score + ", " + "config=" + config +']';
     }
 }
 

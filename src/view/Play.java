@@ -1,11 +1,11 @@
 package view;
 
 import Common.Common;
+import com.google.gson.Gson;
+import model.GameInfo;
 import utilities.MusicPlayer;
 import utilities.SoundEffectManager;
-import view.panel.Board;
-import view.panel.GameInfoPanel;
-import view.panel.ScrollingTextPanel;
+import view.panel.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -162,6 +165,7 @@ public class Play extends JFrame {
 //                            musicPlayer.stop();
 //                        }
                         backToMainMenuOperation();
+
 
                     } else {
                         resumeGame();
@@ -337,6 +341,54 @@ public class Play extends JFrame {
             }
         });
         //pauseOverlayLabel.setFocusable(true); // Pause overlay is focused and is able to detect key presses
+    }
+
+    private void updateLeaderboard(){
+        var players = TetrisHighScoreScreen.readJsonFile();
+        if(players.isEmpty()){
+            // Add players to leaderboard
+            for(GameInfoPanel panel : gameInfoPanel){
+                addPlayerToLeaderboard(panel.getGameInfo());
+            }
+        }else{
+            for(GameInfoPanel panel : gameInfoPanel){
+                GameInfo gameInfo = panel.getGameInfo();
+                int score = gameInfo.getScore();
+                for(PlayerScore player : players){
+                    if(score > player.score()){
+                        addPlayerToLeaderboard(gameInfo);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    private void addPlayerToLeaderboard(GameInfo gameInfo){
+        int playerNum = gameInfo.getPlayerNum();
+        String name = JOptionPane.showInputDialog("Player " + playerNum + "'s score is on the highscore leaderboard, please enter your name Player " + playerNum + ": " );
+        int score = gameInfo.getScore();
+        int playerType = gameInfo.getPlayerType();
+
+        var playerScores = TetrisHighScoreScreen.readJsonFile();
+
+        try{
+            playerScores.add(new PlayerScore(name, score, playerType));
+            playerScores.sort((a, b) -> Integer.compare(b.score(), a.score()));
+
+            if(playerScores.size() > 10){
+                playerScores.removeLast();
+            }
+
+            FileWriter fileWriter = new FileWriter("leaderboard.json");
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write(new Gson().toJson(playerScores));
+            fileWriter.close();
+
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void showPauseOverlay() {
