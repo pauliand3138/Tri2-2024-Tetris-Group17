@@ -135,7 +135,7 @@ public class TetrisMainScreen extends JFrame {
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //starting new game, implement code into this. Currently got a script to show button works.
-                System.out.println("view.Play button pressed. Starting game...");
+                System.out.println("Play button pressed. Starting game...");
 
                 /*
                 In order to make this button actually work I will need to first call in the Tetris Game logic class name.
@@ -151,7 +151,7 @@ public class TetrisMainScreen extends JFrame {
         configButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //opening the configueration screen. Currently got a script to show the button works.
-                System.out.println("view.Configuration button pressed. Opening screen...");
+                System.out.println("Configuration button pressed. Opening screen...");
 
                 /*
                 In order to make this button actually work I will need to first call in the config screen class name.

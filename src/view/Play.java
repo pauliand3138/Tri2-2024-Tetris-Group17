@@ -1,6 +1,8 @@
 package view;
 
 import Common.Common;
+import controller.GameController;
+import model.Game;
 import utilities.MusicPlayer;
 import utilities.SoundEffectManager;
 import view.panel.Board;
@@ -19,6 +21,7 @@ import static java.lang.Math.min;
 import static java.util.Collections.min;
 
 public class Play extends JFrame {
+    public static GameController[] gameController = {null, null};
     private static Board[] board = {null, null};
     public  GameInfoPanel[] gameInfoPanel = {null, null};
     boolean isPlayPaused = false;
@@ -59,7 +62,7 @@ public class Play extends JFrame {
         } else {
             width = 365 + (Common.gameConfig.getFieldWidth() - 5) * 17;
         }
-        int height = 450 + (Common.gameConfig.getFieldHeight() - 15) * 16; //Fixed formula after trial and error
+        int height = 450 + (Common.gameConfig.getFieldHeight() - 15) * 16;
 
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
@@ -120,6 +123,7 @@ public class Play extends JFrame {
             JPanel tetrisBoardPanel = new JPanel();
             tetrisBoardPanel.setLayout(null);
             board[i] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
+            gameController[i] = new GameController(board[i].game);
             tetrisBoardPanel.add(board[i]);
             innerPanel.add(gameInfoPanel[i], BorderLayout.WEST);
             innerPanel.add(tetrisBoardPanel, BorderLayout.CENTER);
@@ -151,32 +155,16 @@ public class Play extends JFrame {
                     // Confirmation dialogue screen
                     int response = JOptionPane.showConfirmDialog(null, "Return to main menu?", "Confirm", JOptionPane.YES_NO_OPTION);
                     if (response == JOptionPane.YES_OPTION) {
-                        // if 'Yes'
-//                        setVisible(false);
-//                        view.TetrisMainScreen mainScreen = new view.TetrisMainScreen();
-//                        Common.gameConfig.setFieldHeight(20);
-//                        Common.gameConfig.setFieldWidth(10);
-//                        mainScreen.setVisible(true);
-//                        closeAllBoardTimer();
-//                        if (!musicPlayer.isPaused()) {
-//                            musicPlayer.stop();
-//                        }
                         backToMainMenuOperation();
-
+                        board[0] = null;
+                        board[1] = null;
                     } else {
                         resumeGame();
                     }
                 } else {
-//                    setVisible(false);
-//                    view.TetrisMainScreen mainScreen = new view.TetrisMainScreen();
-//                    Common.gameConfig.setFieldHeight(20);
-//                    Common.gameConfig.setFieldWidth(10);
-//                    mainScreen.setVisible(true);
-//                    closeAllBoardTimer();
-//                    if (!musicPlayer.isPaused()) {
-//                        musicPlayer.stop();
-//                    }
                     backToMainMenuOperation();
+                    board[0] = null;
+                    board[1] = null;
                 }
             }
         });
@@ -216,8 +204,8 @@ public class Play extends JFrame {
         actionMap.put("right", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[0].isGameOver) {
-                    board[0].moveBlockRight();
+                if (!isPlayPaused && !gameController[0].isGameOver()) {
+                    gameController[0].moveBlockRight();
                 }
             }
         });
@@ -225,8 +213,8 @@ public class Play extends JFrame {
         actionMap.put("left", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[0].isGameOver) {
-                    board[0].moveBlockLeft();
+                if (!isPlayPaused && !gameController[0].isGameOver()) {
+                    gameController[0].moveBlockLeft();
                 }
             }
         });
@@ -234,8 +222,8 @@ public class Play extends JFrame {
         actionMap.put("up", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[0].isGameOver) {
-                    board[0].rotateBlock();
+                if (!isPlayPaused && !gameController[0].isGameOver()) {
+                    gameController[0].rotateBlock();
                 }
             }
         });
@@ -243,8 +231,8 @@ public class Play extends JFrame {
         actionMap.put("down", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[0].isGameOver) {
-                    board[0].moveBlockDown();
+                if (!isPlayPaused && !gameController[0].isGameOver()) {
+                    gameController[0].moveBlockDown();
                 }
             }
         });
@@ -252,8 +240,8 @@ public class Play extends JFrame {
         actionMap.put("w", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[1].isGameOver) {
-                    board[1].rotateBlock();
+                if (!isPlayPaused && !gameController[1].isGameOver()) {
+                    gameController[1].rotateBlock();
                 }
             }
         });
@@ -261,8 +249,8 @@ public class Play extends JFrame {
         actionMap.put("s", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[1].isGameOver) {
-                    board[1].moveBlockDown();
+                if (!isPlayPaused && !gameController[1].isGameOver()) {
+                    gameController[1].moveBlockDown();
                 }
             }
         });
@@ -270,8 +258,8 @@ public class Play extends JFrame {
         actionMap.put("a", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[1].isGameOver) {
-                    board[1].moveBlockLeft();
+                if (!isPlayPaused && !gameController[1].isGameOver()) {
+                    gameController[1].moveBlockLeft();
                 }
             }
         });
@@ -279,8 +267,8 @@ public class Play extends JFrame {
         actionMap.put("d", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isPlayPaused && !board[1].isGameOver) {
-                    board[1].moveBlockRight();
+                if (!isPlayPaused && !gameController[1].isGameOver()) {
+                    gameController[1].moveBlockRight();
                 }
             }
         });
@@ -348,9 +336,9 @@ public class Play extends JFrame {
 
     private void pauseGame() {
         isPlayPaused = true; // Game is paused
-        for(int i = 0; i < board.length; i++) {
-            if (board[i] != null) {
-                board[i].pauseGame();
+        for(int i = 0; i < gameController.length; i++) {
+            if (gameController[i] != null) {
+                gameController[i].pauseGame();
             }
         }
         showPauseOverlay();
@@ -360,9 +348,9 @@ public class Play extends JFrame {
         isPlayPaused = false; // game resumed
         pauseOverlayLabel.setVisible(false); // hides the overlay
         layeredPane.moveToFront(board[0]); // moves overlay to back
-        for(int i = 0; i < board.length; i++) {
-            if (board[i] != null) {
-                board[i].resumeGame();
+        for(int i = 0; i < gameController.length; i++) {
+            if (gameController[i] != null) {
+                gameController[i].resumeGame();
             }
         }
         requestFocusInWindow(); // board focused to capture key movements
@@ -377,7 +365,7 @@ public class Play extends JFrame {
 
     public static boolean isAllGameEnded() {
         boolean isEnded = true;
-        for(int i = 0; i < board.length; i++) {
+        for(int i = 0; i < gameController.length; i++) {
             if (board[i] != null) {
                 if(!board[i].isGameOver) {
                     isEnded = false;

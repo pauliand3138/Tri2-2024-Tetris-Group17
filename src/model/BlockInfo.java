@@ -66,5 +66,4 @@ public class BlockInfo {
         }
         shape = shapes[1]; // Added this line to prevent rotate not working during first press
     }
-
 }
