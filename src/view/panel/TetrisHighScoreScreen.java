@@ -109,14 +109,13 @@ public class TetrisHighScoreScreen extends JFrame {
     }
 }
 
-record PlayerScore(String name, int score) {
+record PlayerScore(String name, int score, String config) {
 
     @Override
     public String toString() {
         return "view.panel.PlayerScore[" +
                 "name=" + name + ", " +
-                "score=" + score + ']';
+                "score=" + score + ", " + "config=" + config +']';
     }
-
 }
 
