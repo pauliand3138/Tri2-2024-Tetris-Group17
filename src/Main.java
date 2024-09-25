@@ -1,3 +1,8 @@
+import Common.Common;
+import model.GameConfig;
+import view.SplashScreen;
+import view.TetrisMainScreen;
+
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;

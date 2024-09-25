@@ -1,3 +1,7 @@
+package view.panel;
+
+import model.Block;
+
 import javax.swing.*;
 import java.awt.*;
 

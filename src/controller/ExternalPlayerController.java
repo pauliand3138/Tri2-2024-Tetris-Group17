@@ -1,4 +1,8 @@
+package controller;
+
 import com.google.gson.Gson;
+import model.OpMove;
+import model.PureGame;
 
 import java.io.*;
 import java.net.*;
@@ -33,12 +37,12 @@ public class ExternalPlayerController {
         System.out.println("Received response from server: " + response);
 
         move = gson.fromJson(response, OpMove.class);
-        System.out.println("Optimal Move: X=" + move.getOpX() + " Rotations= " + move.getOpRotate());
+        System.out.println("Optimal model.Move: X=" + move.getOpX() + " Rotations= " + move.getOpRotate());
 
         if (move.getOpX() == 0) {
             System.out.println("Place the piece at the left-most position.");
         } else {
-            System.out.println("Move the piece to X = " + move.getOpX());
+            System.out.println("model.Move the piece to X = " + move.getOpX());
         }
 
         if (move.getOpRotate() == 0) {

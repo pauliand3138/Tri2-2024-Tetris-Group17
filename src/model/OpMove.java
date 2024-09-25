@@ -1,3 +1,5 @@
+package model;
+
 public class OpMove{
     private int opX;
     private int opRotate;

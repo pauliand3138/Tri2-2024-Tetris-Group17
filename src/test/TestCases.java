@@ -1,5 +1,14 @@
+package test;
+
+import Common.Common;
+import model.Block;
+import model.BlockInfo;
+import model.GameConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import view.panel.Board;
+import view.panel.GameInfoPanel;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestCases {
@@ -29,7 +38,7 @@ public class TestCases {
         Block block = board.getBlock(); // accessing block directly
         block.setX(0); // set block at left edge
         board.moveBlockLeft();
-        assertEquals(0, block.getX(), "Block should not move left out of the boundary");
+        assertEquals(0, block.getX(), "model.Block should not move left out of the boundary");
     }
 
     @Test
@@ -38,7 +47,7 @@ public class TestCases {
         block.setX(board.getCOL_COUNT() - block.getBlockInfo().getColumns());
         board.moveBlockRight();
         assertEquals(board.getCOL_COUNT() - block.getBlockInfo().getColumns(), block.getX(),
-                "Block should not move right out of the boundary");
+                "model.Block should not move right out of the boundary");
     }
 
     @Test
@@ -47,14 +56,14 @@ public class TestCases {
         block.setY(board.getROW_COUNT() - block.getBlockInfo().getRows());
         board.moveBlockDown();
         assertEquals(board.getROW_COUNT() - block.getBlockInfo().getRows(), (int) block.getY(),
-                "Block should not move down out of the boundary");
+                "model.Block should not move down out of the boundary");
     }
 
     @Test
     public void testBlockSpawnOutOfBounds() {
         Block block = board.getBlock();
         BlockInfo currentBlockInfo = block.getBlockInfo();
-        assertTrue(block.getY() >= -currentBlockInfo.getRows(), "Block should spawn within top boundary");
+        assertTrue(block.getY() >= -currentBlockInfo.getRows(), "model.Block should spawn within top boundary");
     }
 
     @Test
@@ -63,6 +72,6 @@ public class TestCases {
         block.setX(board.getCOL_COUNT() - block.getBlockInfo().getColumns());
         board.rotateBlock();
         assertTrue(block.getX() + block.getBlockInfo().getColumns() <= board.getCOL_COUNT(),
-                "Block rotation should not push the blocks out of bounds");
+                "model.Block rotation should not push the blocks out of bounds");
     }
 }

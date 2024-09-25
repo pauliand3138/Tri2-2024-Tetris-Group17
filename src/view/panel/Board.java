@@ -1,15 +1,16 @@
-import com.google.gson.Gson;
+package view.panel;
+
+import Common.Common;
+import controller.BoardEvaluator;
+import controller.ExternalPlayerController;
+import model.*;
+import view.Play;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.Random;
 
 public class Board extends JPanel implements ActionListener {
@@ -18,22 +19,15 @@ public class Board extends JPanel implements ActionListener {
     private final int TETRIS_BLOCK_COUNT = 7;
     private int gridCellSize;
     int[][] board;
-    /*
-        Board will store the tetris blocks unique number to keep track of where each was placed.
-    */
     private BlockInfo[] blocks;
-    /*
-        Blocks will store the different types of tetris blocks that can be generated. There are TETRIS_BLOCK_COUNT number of blocks
-        each with their own shape, colour, and unique number
-    */
-    public Block block; // Block is the current block being dropped in the game.
+    public Block block; // model.Block is the current block being dropped in the game.
     public Block nextBlock;
     private Color[][] droppedBlocks;
     public boolean isBoardActive = true;
     private final int playerNum;
-    private Timer timer = null;
-    private Timer AIdownTimer = null;
-    private Timer ExternalPlayerTimer = null;
+    public Timer timer = null;
+    public Timer AIdownTimer = null;
+    public Timer ExternalPlayerTimer = null;
     public boolean isPaused; // checks if game is paused
     public boolean isGameOver = false;
     public boolean isAI = false;
@@ -42,16 +36,13 @@ public class Board extends JPanel implements ActionListener {
     private long currentBlockSeed = Common.gameSeed;
     private GameInfoPanel gameInfoPanel;
     private GameInfo gameInfo;
-    private final PureGame pureGame = new PureGame(Common.gameConfig.getFieldHeight(), Common.gameConfig.getFieldWidth());
-    private OpMove externalMove;
-
+    //private final model.PureGame pureGame = new model.PureGame(Common.gameConfig.getFieldHeight(), Common.gameConfig.getFieldWidth());
+    //private model.OpMove externalMove;
     public ExternalPlayerController externalPlayerController;
-
-    private Socket socket;
-    private BufferedReader in;
-    private PrintWriter out;
-    private OpMove move;
-
+    //private Socket socket;
+    //private BufferedReader in;
+    //private PrintWriter out;
+    // model.OpMove move;
 
     public Board(int width, int height, int playerNum, GameInfoPanel gameInfoPanel){
         this.playerNum = playerNum;
@@ -61,7 +52,6 @@ public class Board extends JPanel implements ActionListener {
         timer = new Timer(50, this);
         timer.start();
     }
-
 
     private void initialize(int width, int height) {
         board = new int[ROW_COUNT][COL_COUNT];
@@ -309,7 +299,6 @@ public class Board extends JPanel implements ActionListener {
             for (int col = 0; col < width; col++) {
                 if (shape[row][col] == 1 && row + y >= 0 && col + x >= 0 ) {
                     droppedBlocks[row + y][col + x] = color;
-                    //board[row + y][col + x] = 1;
                 }
             }
         }
@@ -368,6 +357,7 @@ public class Board extends JPanel implements ActionListener {
             if (!isReachedBottom()) {
                 dropBlockNaturally();
                 if (!isBoardActive) {
+                    timer.stop();
                     timer = null;
                     if (isAI) {
                         AIdownTimer.stop();
@@ -460,7 +450,7 @@ public class Board extends JPanel implements ActionListener {
         }
     }
     // AI Code
-    public Move findBestMove(Color[][] board, Block block) {
+    public Move findBestMove(int[][] board, Block block) {
         Move bestMove = null;
         int bestScore = Integer.MIN_VALUE;
 
@@ -469,11 +459,11 @@ public class Board extends JPanel implements ActionListener {
                 Block simulatedBlock = new Block(block);
                 simulatedBlock.rotate();
 
-                Color[][] simulatedBoard = simulateDrop(board, simulatedBlock, col);
+                int[][] simulatedBoard = simulateDrop(board, simulatedBlock, col);
                 int score = evaluator.evaluateBoard(simulatedBoard);
                 if (score > bestScore) {
                     bestScore = score;
-                    bestMove = new Move(col, simulatedBlock.getBlockInfo().getShape());
+                    bestMove = new Move(col, rotation);
                 }
             }
         }
@@ -481,14 +471,14 @@ public class Board extends JPanel implements ActionListener {
         return bestMove;
     }
 
-    private Color[][] simulateDrop(Color[][] board, Block block, int col) {
-        Color[][] simulatedBoard = copyBoard(board);
+    private int[][] simulateDrop(int[][] board, Block block, int col) {
+        int[][] simulatedBoard = copyBoard(board);
         int dropRow = getDropRow(simulatedBoard, block, col);
         placePiece(simulatedBoard, block, col, dropRow);
         return simulatedBoard;
     }
 
-    private int getDropRow(Color[][] board, Block block, int col) {
+    private int getDropRow(int[][] board, Block block, int col) {
         int row = 0;
         while (canPlacePiece(board, block, col, row)) {
             row++;
@@ -496,7 +486,7 @@ public class Board extends JPanel implements ActionListener {
         return row - 1;
     }
 
-    private boolean canPlacePiece(Color[][] board, Block block, int testCol, int testRow) {
+    private boolean canPlacePiece(int[][] board, Block block, int testCol, int testRow) {
         int[][] shape = block.getBlockInfo().getShape();
         int height = block.getBlockInfo().getRows();
         int width = block.getBlockInfo().getColumns();
@@ -506,7 +496,7 @@ public class Board extends JPanel implements ActionListener {
                 if (shape[row][col] == 1) {
                     int x = col + testCol;
                     int y = row + testRow;
-                    if (x < 0 || x >= board[0].length || y < 0 || y >= board.length || board[y][x] != null)  {
+                    if (x < 0 || x >= board[0].length || y < 0 || y >= board.length || board[y][x] != 0)  {
                         return false;
                     }
                 }
@@ -515,25 +505,25 @@ public class Board extends JPanel implements ActionListener {
         return true;
     }
 
-    private void placePiece(Color[][] board, Block block, int testCol, int testRow) {
+    private void placePiece(int[][] board, Block block, int testCol, int testRow) {
         int[][] shape = block.getBlockInfo().getShape();
         int height = block.getBlockInfo().getRows();
         int width = block.getBlockInfo().getColumns();
         int x = block.getX() + testCol;
         int y = (int)block.getY() + testRow;
-        Color color = block.getBlockInfo().getColour();
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 if (shape[row][col] == 1 && row + y >= 0 && col + x >= 0 && row + y < board.length && col + x < board[row].length) {
-                    board[row + y][col + x] = color;
+                    board[row + y][col + x] = 1;
                 }
             }
         }
     }
 
-    private Color[][] copyBoard(Color[][] board) {
-        Color[][] newBoard = new Color[board.length][board[0].length];
+
+    private int[][] copyBoard(int[][] board) {
+        int[][] newBoard = new int[board.length][board[0].length];
         for (int y = 0; y < board.length; y++) {
             System.arraycopy(board[y], 0, newBoard[y], 0, board[y].length);
         }
@@ -541,20 +531,19 @@ public class Board extends JPanel implements ActionListener {
     }
 
     public void moveBlockDownAI(){
-        Move bestMove = findBestMove(droppedBlocks, block);
+        Move bestMove = findBestMove(board, block);
 
-        for(int i = 0; i < 4; i++) {
-            if (!Arrays.deepEquals(block.getBlockInfo().getShape(), bestMove.getShape())) {
-                rotateBlock();
-                Play.soundManager.playSound("move.wav");
-            }
+        for(int i = 0; i < bestMove.getRotation() + 1; i++) {
+            rotateBlock();
+            Play.soundManager.playSound("move.wav");
         }
 
         int leftCounter = 0;
         int loopBreaker1 = 0;
         while (block.getX() > bestMove.getCol() && leftCounter < 2 && loopBreaker1 < Common.gameConfig.getFieldWidth() / 2) {
-            System.out.println("Block X: " + block.getX());
+            //System.out.println("model.Block X: " + block.getX());
             moveBlockLeft();
+            Play.soundManager.playSound("move.wav");
             if (Math.abs(bestMove.getCol() - block.getX()) == 1) {
                 leftCounter++;
             }
@@ -564,15 +553,15 @@ public class Board extends JPanel implements ActionListener {
         int rightCounter = 0;
         int loopBreaker2 = 0;
         while (block.getX() < bestMove.getCol() && rightCounter < 2 && loopBreaker2 < Common.gameConfig.getFieldWidth() / 2) {
-            System.out.println("Block X: " + block.getX());
-            System.out.println(bestMove.getCol());
+            //System.out.println("model.Block X: " + block.getX());
+            //System.out.println(bestMove.getCol());
             moveBlockRight();
+            Play.soundManager.playSound("move.wav");
             if (Math.abs(bestMove.getCol() - block.getX()) == 1) {
                 rightCounter++;
             }
             loopBreaker2++;
         }
-
 
         AIdownTimer = new Timer(50, new ActionListener() {
             @Override
@@ -594,7 +583,6 @@ public class Board extends JPanel implements ActionListener {
         game.setCells(board);
         game.setCurrentShape(block.getBlockInfo().getShape());
         game.setNextShape(nextBlock.getBlockInfo().getShape());
-        //System.out.println(pureGame);
 
         OpMove externalMove = externalPlayerController.getNewMove(game);
 
@@ -605,22 +593,6 @@ public class Board extends JPanel implements ActionListener {
             isGameOver = true;
             return;
         }
-
-//
-//        while (block.getX() < opX) {
-//            block.moveRight();
-//        }
-//
-//        while (block.getX() > opX) {
-//            block.moveLeft();
-//        }
-//
-//        while (opRotate > 0) {
-//            block.rotate();
-//            opRotate--;
-//        }
-
-
         final int[] opRotateRef = {opRotate};
         ExternalPlayerTimer = new Timer(100, new ActionListener() {
             @Override
@@ -644,12 +616,6 @@ public class Board extends JPanel implements ActionListener {
                 } else {
                     ExternalPlayerTimer.stop();
                 }
-
-//                if (block != null || !isGameOver) {
-//                    moveBlockDown();
-//                } else {
-//                    ExternalPlayerTimer.stop();
-//                }
             }
         });
         ExternalPlayerTimer.start();

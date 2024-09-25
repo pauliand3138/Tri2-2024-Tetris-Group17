@@ -1,3 +1,5 @@
+package model;
+
 import java.util.Arrays;
 
 public class PureGame {
@@ -30,7 +32,7 @@ public class PureGame {
 
     @Override
     public String toString() {
-        return "PureGame{" +
+        return "model.PureGame{" +
                 "width=" + width +
                 ", height=" + height +
                 ", cells=" + Arrays.deepToString(cells) +

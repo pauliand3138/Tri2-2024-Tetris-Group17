@@ -1,3 +1,7 @@
+package model;
+
+import Common.Common;
+
 public class GameInfo {
     private int score;
     private int initLevel;

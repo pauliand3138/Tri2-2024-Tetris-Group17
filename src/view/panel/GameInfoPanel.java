@@ -1,3 +1,8 @@
+package view.panel;
+
+import Common.Common;
+import model.GameInfo;
+
 import javax.swing.*;
 import java.awt.*;
 

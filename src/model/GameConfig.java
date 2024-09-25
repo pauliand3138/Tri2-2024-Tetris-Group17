@@ -1,3 +1,5 @@
+package model;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -121,6 +123,6 @@ public class GameConfig {
 
     @Override
     public String toString() {
-        return "GameConfig{" + "fieldWidth=" + fieldWidth + ", fieldHeight=" + fieldHeight + ", gameLevel=" + gameLevel + ", music=" + music + ", soundEffect=" + soundEffect + ", extendMode=" + extendMode + ", playerOneType=" + playerOneType + ", playerTwoType=" + playerTwoType + '}';
+        return "model.GameConfig{" + "fieldWidth=" + fieldWidth + ", fieldHeight=" + fieldHeight + ", gameLevel=" + gameLevel + ", music=" + music + ", soundEffect=" + soundEffect + ", extendMode=" + extendMode + ", playerOneType=" + playerOneType + ", playerTwoType=" + playerTwoType + '}';
     }
 }

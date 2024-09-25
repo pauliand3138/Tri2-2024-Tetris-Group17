@@ -1,3 +1,7 @@
+package view.panel;
+
+import view.TetrisMainScreen;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-class TetrisHighScoreScreen extends JFrame {
+public class TetrisHighScoreScreen extends JFrame {
 
     public TetrisHighScoreScreen() {
         Font HEADER_FONT = new Font("Calibri", Font.BOLD, 16);
@@ -109,7 +113,7 @@ record PlayerScore(String name, int score) {
 
     @Override
     public String toString() {
-        return "PlayerScore[" +
+        return "view.panel.PlayerScore[" +
                 "name=" + name + ", " +
                 "score=" + score + ']';
     }

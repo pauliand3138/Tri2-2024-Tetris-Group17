@@ -1,4 +1,6 @@
-import javazoom.jl.decoder.Bitstream;
+package utilities;
+
+import Common.Common;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
@@ -19,7 +21,7 @@ public class MusicPlayer implements Runnable {
 
     private synchronized void initPlayer() {
         try {
-            FileInputStream fileInputStream = new FileInputStream("sounds/bgm.mp3");
+            FileInputStream fileInputStream = new FileInputStream("src\\resources\\audio\\bgm.mp3");
             player = new Player(fileInputStream);
         } catch (FileNotFoundException e) {
             System.out.println("BGM file not found");

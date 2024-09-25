@@ -1,7 +1,7 @@
-import java.awt.*;
+package controller;
 
 public class BoardEvaluator {
-    public int evaluateBoard(Color[][] board) {
+    public int evaluateBoard(int[][] board) {
         int heightScore = getHeight(board);
         int holesScore = getHoles(board);
         int linesCleared = getClearedLines(board);
@@ -10,11 +10,11 @@ public class BoardEvaluator {
         return (-4 * heightScore) + (3 * linesCleared) - (5 * holesScore) - (2 * bumpinessScore);
     }
 
-    private int getHeight(Color[][] board) {
+    private int getHeight(int[][] board) {
         int height = 0;
         for (int x = 0; x < board[0].length; x++) {
             for(int y = 0; y < board.length; y++) {
-                if (board[y][x] != null) {
+                if (board[y][x] != 0) {
                     height = Math.max(height, board.length - y);
                     break;
                 }
@@ -23,14 +23,14 @@ public class BoardEvaluator {
         return height;
     }
 
-    private int getHoles(Color[][] board) {
+    private int getHoles(int[][] board) {
         int holes = 0;
         for (int x = 0; x < board[0].length; x++) {
             boolean foundBlock = false;
             for (int y = 0; y < board.length; y++) {
-                if (board[y][x] != null) {
+                if (board[y][x] != 0) {
                     foundBlock = true;
-                } else if (foundBlock && board[y][x] == null) {
+                } else if (foundBlock && board[y][x] == 0) {
                     holes++;
                 }
             }
@@ -38,21 +38,23 @@ public class BoardEvaluator {
         return holes;
     }
 
-    private int getClearedLines(Color[][] board) {
+    private int getClearedLines(int[][] board) {
         int clearedLines = 0;
         for(int y = 0; y < board.length; y++) {
             boolean isLineFull = true;
             for(int x = 0; x < board.length; x++) {
-                if (board[y][x] == null) {
+                if (board[y][x] == 0) {
                     isLineFull = false;
                     break;
                 }
             }
+            if (isLineFull)
+                clearedLines++;
         }
         return clearedLines;
     }
 
-    private int getBumpiness(Color[][] board) {
+    private int getBumpiness(int[][] board) {
         int bumpiness = 0;
         for(int x = 0; x < board[0].length - 1; x++) {
             int colHeight1 = getColumnHeight(board, x);
@@ -62,9 +64,9 @@ public class BoardEvaluator {
         return bumpiness;
     }
 
-    private int getColumnHeight(Color[][] board, int col) {
+    private int getColumnHeight(int[][] board, int col) {
         for(int y = 0; y < board.length; y++) {
-            if (board[y][col] != null) {
+            if (board[y][col] != 0) {
                 return board.length - y;
             }
         }

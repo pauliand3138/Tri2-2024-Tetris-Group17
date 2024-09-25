@@ -1,3 +1,7 @@
+package view;
+
+import view.panel.TetrisHighScoreScreen;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -13,7 +17,7 @@ public class TetrisMainScreen extends JFrame {
         setSize(550, 700); //size of the window
 
         // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
-        backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\Space Theme.jpg"); //loading background image.
+        backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\resources\\image\\Space Theme.jpg"); //loading background image.
 
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,7 +47,7 @@ public class TetrisMainScreen extends JFrame {
 
         //uploaded Tetris Logo to main menu
         // Tetris Logo sourced from: https://seeklogo.com/vector-logo/387138/tetris
-        ImageIcon tetrisLogo = new ImageIcon("src\\tetris-seeklogo.png");
+        ImageIcon tetrisLogo = new ImageIcon("src\\resources\\image\\tetris-seeklogo.png");
         Image logoImage = tetrisLogo.getImage().getScaledInstance(200,150,Image.SCALE_SMOOTH); //scaling the size of logo
         tetrisLogo = new ImageIcon(logoImage);
 
@@ -131,7 +135,7 @@ public class TetrisMainScreen extends JFrame {
         playButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //starting new game, implement code into this. Currently got a script to show button works.
-                System.out.println("Play button pressed. Starting game...");
+                System.out.println("view.Play button pressed. Starting game...");
 
                 /*
                 In order to make this button actually work I will need to first call in the Tetris Game logic class name.
@@ -147,7 +151,7 @@ public class TetrisMainScreen extends JFrame {
         configButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //opening the configueration screen. Currently got a script to show the button works.
-                System.out.println("Configuration button pressed. Opening screen...");
+                System.out.println("view.Configuration button pressed. Opening screen...");
 
                 /*
                 In order to make this button actually work I will need to first call in the config screen class name.

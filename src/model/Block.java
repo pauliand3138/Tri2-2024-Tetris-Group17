@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package model;
 
 public class Block {
     private BlockInfo blockInfo;
@@ -42,6 +42,8 @@ public class Block {
     public Block(Block block) {
         this.x = block.getX();
         this.y = block.getY();
-        this.blockInfo = block.getBlockInfo();
+        this.blockInfo = new BlockInfo(block.getBlockInfo().getShape(), block.getBlockInfo().getColour(), block.getBlockInfo().getNumber());
     }
+
+
 }

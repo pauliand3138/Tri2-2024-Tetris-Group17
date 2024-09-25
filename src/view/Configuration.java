@@ -1,3 +1,8 @@
+package view;
+
+import Common.Common;
+import view.panel.ScrollingTextPanel;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -19,7 +24,7 @@ public class Configuration extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel titlePanel = new JPanel();
-        JLabel titleLabel = new JLabel("Configuration");
+        JLabel titleLabel = new JLabel("view.Configuration");
         titleLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         titlePanel.add(titleLabel);
 

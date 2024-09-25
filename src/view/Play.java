@@ -1,3 +1,12 @@
+package view;
+
+import Common.Common;
+import utilities.MusicPlayer;
+import utilities.SoundEffectManager;
+import view.panel.Board;
+import view.panel.GameInfoPanel;
+import view.panel.ScrollingTextPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,8 +27,11 @@ public class Play extends JFrame {
     private JLayeredPane layeredPane;
     private JLabel musicLabel, soundLabel;
     private MusicPlayer musicPlayer = createMusicPlayer();
-    static String[] soundFiles = {"sounds/move.wav", "sounds/levelup.wav", "sounds/clearline.wav", "sounds/gameover.wav"};
-    static SoundEffectManager soundManager = new SoundEffectManager(soundFiles);
+    static String[] soundFiles = {"src\\resources\\audio\\move.wav",
+            "src\\resources\\audio\\levelup.wav",
+            "src\\resources\\audio\\clearline.wav",
+            "src\\resources\\audio\\gameover.wav"};
+    public static SoundEffectManager soundManager = new SoundEffectManager(soundFiles);
     public static boolean isConnectionError = false;
 
     public Play() {
@@ -140,32 +152,31 @@ public class Play extends JFrame {
                     int response = JOptionPane.showConfirmDialog(null, "Return to main menu?", "Confirm", JOptionPane.YES_NO_OPTION);
                     if (response == JOptionPane.YES_OPTION) {
                         // if 'Yes'
-                        setVisible(false);
-                        TetrisMainScreen mainScreen = new TetrisMainScreen();
-                        Common.gameConfig.setFieldHeight(20);
-                        Common.gameConfig.setFieldWidth(10);
-                        mainScreen.setVisible(true);
-                        for (Board game : board) {
-                            if (game != null) {
-                                game.isBoardActive = false;
-                            }
-                        }
-                        if (!musicPlayer.isPaused()) {
-                            musicPlayer.stop();
-                        }
+//                        setVisible(false);
+//                        view.TetrisMainScreen mainScreen = new view.TetrisMainScreen();
+//                        Common.gameConfig.setFieldHeight(20);
+//                        Common.gameConfig.setFieldWidth(10);
+//                        mainScreen.setVisible(true);
+//                        closeAllBoardTimer();
+//                        if (!musicPlayer.isPaused()) {
+//                            musicPlayer.stop();
+//                        }
+                        backToMainMenuOperation();
 
                     } else {
                         resumeGame();
                     }
                 } else {
-                    setVisible(false);
-                    TetrisMainScreen mainScreen = new TetrisMainScreen();
-                    Common.gameConfig.setFieldHeight(20);
-                    Common.gameConfig.setFieldWidth(10);
-                    mainScreen.setVisible(true);
-                    if (!musicPlayer.isPaused()) {
-                        musicPlayer.stop();
-                    }
+//                    setVisible(false);
+//                    view.TetrisMainScreen mainScreen = new view.TetrisMainScreen();
+//                    Common.gameConfig.setFieldHeight(20);
+//                    Common.gameConfig.setFieldWidth(10);
+//                    mainScreen.setVisible(true);
+//                    closeAllBoardTimer();
+//                    if (!musicPlayer.isPaused()) {
+//                        musicPlayer.stop();
+//                    }
+                    backToMainMenuOperation();
                 }
             }
         });
@@ -374,5 +385,29 @@ public class Play extends JFrame {
             }
         }
         return isEnded;
+    }
+
+    public void backToMainMenuOperation() {
+        setVisible(false);
+        TetrisMainScreen mainScreen = new TetrisMainScreen();
+        Common.gameConfig.setFieldHeight(20);
+        Common.gameConfig.setFieldWidth(10);
+        mainScreen.setVisible(true);
+        if (!musicPlayer.isPaused()) {
+            musicPlayer.stop();
+        }
+        for (Board game : board) {
+            if (game != null) {
+                game.isBoardActive = false;
+                game.timer.stop();
+                game.timer = null;
+                if (game.AIdownTimer != null)
+                    game.AIdownTimer.stop();
+                game.AIdownTimer = null;
+                if (game.ExternalPlayerTimer != null)
+                    game.ExternalPlayerTimer.stop();
+                game.ExternalPlayerTimer = null;
+            }
+        }
     }
 }
