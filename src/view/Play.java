@@ -164,6 +164,9 @@ public class Play extends JFrame {
 //                        if (!musicPlayer.isPaused()) {
 //                            musicPlayer.stop();
 //                        }
+
+                        updateLeaderboard();
+
                         backToMainMenuOperation();
 
 
@@ -180,6 +183,8 @@ public class Play extends JFrame {
 //                    if (!musicPlayer.isPaused()) {
 //                        musicPlayer.stop();
 //                    }
+
+                    updateLeaderboard();
                     backToMainMenuOperation();
                 }
             }
@@ -370,9 +375,7 @@ public class Play extends JFrame {
         String name = JOptionPane.showInputDialog("Player " + playerNum + "'s score is on the highscore leaderboard, please enter your name Player " + playerNum + ": " );
         int score = gameInfo.getScore();
         int playerType = gameInfo.getPlayerType();
-
         var playerScores = TetrisHighScoreScreen.readJsonFile();
-
         try{
             playerScores.add(new PlayerScore(name, score, playerType));
             playerScores.sort((a, b) -> Integer.compare(b.score(), a.score()));
@@ -380,7 +383,6 @@ public class Play extends JFrame {
             if(playerScores.size() > 10){
                 playerScores.removeLast();
             }
-
             FileWriter fileWriter = new FileWriter("leaderboard.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(new Gson().toJson(playerScores));

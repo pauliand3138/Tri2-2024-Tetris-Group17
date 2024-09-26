@@ -54,7 +54,7 @@ public class TetrisHighScoreScreen extends JFrame {
             }
         });
 
-        writeJsonFile();
+        //writeJsonFile();
 
         List<PlayerScore> playerScores = readJsonFile();
 
@@ -165,7 +165,16 @@ public class TetrisHighScoreScreen extends JFrame {
             playerScoreLabels.add(new JLabel("(" + playerNumber + ") "));
             playerScoreLabels.add(new JLabel(playerScore.name()));
             playerScoreLabels.add(new JLabel(String.valueOf(playerScore.score())));
-            playerScoreLabels.add(new JLabel(String.valueOf(playerScore.config())));
+            String configurationType;
+            int playerConfig = playerScore.config();
+            if(playerConfig == 0){
+                configurationType = "Human";
+            }else if(playerConfig == 1){
+                configurationType = "AI";
+            }else{
+                configurationType = "External";
+            }
+            playerScoreLabels.add(new JLabel(configurationType));
             playerNumber++;
         }
 
@@ -181,11 +190,11 @@ public class TetrisHighScoreScreen extends JFrame {
             FileWriter fileWriter = new FileWriter("leaderboard.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             ArrayList<PlayerScore> players = new ArrayList<>();
-
+            int[] configTypes = {0, 1, 2};
             for(int i = 1 ; i <= 10 ; i++){
                 Random random = new Random();
-
-                PlayerScore player = new PlayerScore("Player " + i, (int) (Math.random() * 100), 0);
+                int index = random.nextInt(configTypes.length);
+                PlayerScore player = new PlayerScore("Player " + i, (int) (Math.random() * 100), index);
                 players.add(player);
             }
             bufferedWriter.write(gson.toJson(players));
