@@ -2,7 +2,6 @@ package view;
 
 import Common.Common;
 import controller.GameController;
-import model.Game;
 import utilities.MusicPlayer;
 import utilities.SoundEffectManager;
 import view.panel.Board;
@@ -19,6 +18,7 @@ import java.awt.event.KeyEvent;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.Collections.min;
+import static view.MainScreen.common;
 
 public class Play extends JFrame {
     public static GameController[] gameController = {null, null};
@@ -40,7 +40,7 @@ public class Play extends JFrame {
     public Play() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // For generating random tetris block
-        Common.gameSeed = System.currentTimeMillis();
+        common.setGameSeed(System.currentTimeMillis());
         initialize();
         addElements();
         addKeybindControls();
@@ -57,12 +57,12 @@ public class Play extends JFrame {
         setLayout(new BorderLayout());
 
         int width;
-        if (Common.gameConfig.isExtendMode()) {
-            width = ((365 + (Common.gameConfig.getFieldWidth() - 5) * 17) * 2);
+        if (common.gameConfig.isExtendMode()) {
+            width = ((365 + (common.gameConfig.getFieldWidth() - 5) * 17) * 2);
         } else {
-            width = 365 + (Common.gameConfig.getFieldWidth() - 5) * 17;
+            width = 365 + (common.gameConfig.getFieldWidth() - 5) * 17;
         }
-        int height = 450 + (Common.gameConfig.getFieldHeight() - 15) * 16;
+        int height = 450 + (common.gameConfig.getFieldHeight() - 15) * 16;
 
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screenSize = tk.getScreenSize();
@@ -70,7 +70,7 @@ public class Play extends JFrame {
         int y = screenSize.height / 2 - height / 2;
         setBounds(x, y, width, height);
         layeredPane = getLayeredPane(); // initializing the layered pane
-        if (!Common.gameConfig.isSoundEffect()) {
+        if (!common.gameConfig.isSoundEffect()) {
             soundManager.close();
         }
     }
@@ -95,8 +95,8 @@ public class Play extends JFrame {
         JPanel bottomTitlePanel = new JPanel();
         bottomTitlePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10,0));
 
-        musicLabel = new JLabel(Common.gameConfig.isMusic() ? "Music(M): ON" : "Music(M): OFF");
-        soundLabel = new JLabel(Common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
+        musicLabel = new JLabel(common.gameConfig.isMusic() ? "Music(M): ON" : "Music(M): OFF");
+        soundLabel = new JLabel(common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
         bottomTitlePanel.add(musicLabel);
         bottomTitlePanel.add(soundLabel);
 
@@ -108,7 +108,7 @@ public class Play extends JFrame {
         JPanel soundPanel = new JPanel();
         soundPanel.setSize(width, height);
 
-        int playerCount = Common.gameConfig.isExtendMode() ? 2 : 1;
+        int playerCount = common.gameConfig.isExtendMode() ? 2 : 1;
 
         int boardPanelHeight = (int) (height * boardPanelPct);
         JPanel boardPanel = new JPanel();
@@ -118,11 +118,11 @@ public class Play extends JFrame {
             JPanel outerPane = new JPanel();
             outerPane.setLayout(new GridLayout(1, 2));
             JPanel innerPanel = new JPanel(new BorderLayout());
-            int playerType = i == 0 ? Common.gameConfig.getPlayerOneType() : Common.gameConfig.getPlayerTwoType();
+            int playerType = i == 0 ? common.gameConfig.getPlayerOneType() : common.gameConfig.getPlayerTwoType();
             gameInfoPanel[i] = new GameInfoPanel(i + 1, playerType);
             JPanel tetrisBoardPanel = new JPanel();
             tetrisBoardPanel.setLayout(null);
-            board[i] = new Board(Common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
+            board[i] = new Board(common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
             gameController[i] = new GameController(board[i].game);
             tetrisBoardPanel.add(board[i]);
             innerPanel.add(gameInfoPanel[i], BorderLayout.WEST);
@@ -303,13 +303,13 @@ public class Play extends JFrame {
         actionMap.put("n", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Common.gameConfig.isSoundEffect()) {
+                if (common.gameConfig.isSoundEffect()) {
                     soundManager.close();
                 } else {
                     soundManager.loadSoundEffects(soundFiles);
                 }
-                Common.gameConfig.setSoundEffect(!Common.gameConfig.isSoundEffect());
-                soundLabel.setText(Common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
+                common.gameConfig.setSoundEffect(!common.gameConfig.isSoundEffect());
+                soundLabel.setText(common.gameConfig.isSoundEffect() ? "Sound(N): ON" : "Sound(N): OFF");
 
             }
         });
@@ -377,9 +377,9 @@ public class Play extends JFrame {
 
     public void backToMainMenuOperation() {
         setVisible(false);
-        TetrisMainScreen mainScreen = new TetrisMainScreen();
-        Common.gameConfig.setFieldHeight(20);
-        Common.gameConfig.setFieldWidth(10);
+        MainScreen mainScreen = new MainScreen();
+        common.gameConfig.setFieldHeight(20);
+        common.gameConfig.setFieldWidth(10);
         mainScreen.setVisible(true);
         if (!musicPlayer.isPaused()) {
             musicPlayer.stop();

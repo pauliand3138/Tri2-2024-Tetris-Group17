@@ -14,11 +14,13 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Random;
 
-import static Common.Common.gameConfig;
+import static view.MainScreen.common;
+
+//import static Common.Common.gameConfig;
 
 public class Board extends JPanel implements ActionListener {
-    private final int ROW_COUNT = gameConfig.getFieldHeight();
-    private final int COL_COUNT = gameConfig.getFieldWidth();
+    private final int ROW_COUNT = common.gameConfig.getFieldHeight();
+    private final int COL_COUNT = common.gameConfig.getFieldWidth();
     private final int TETRIS_BLOCK_COUNT = 7;
     private int gridCellSize;
     public int[][] board;
@@ -35,7 +37,7 @@ public class Board extends JPanel implements ActionListener {
     public boolean isGameOver = false;
     public boolean isAI = false;
     public boolean isExternalPlayer = false;
-    private long currentBlockSeed = Common.gameSeed;
+    private long currentBlockSeed = common.getGameSeed();
     private GameInfoPanel gameInfoPanel;
     private GameInfo gameInfo;
     public AIController aiController;
@@ -62,7 +64,7 @@ public class Board extends JPanel implements ActionListener {
         blocks = new BlockInfo[TETRIS_BLOCK_COUNT];
         initBlockInfo();
         createTetrisBlock();
-        int playerType = playerNum == 0 ? gameConfig.getPlayerOneType() : gameConfig.getPlayerTwoType();
+        int playerType = playerNum == 0 ? common.gameConfig.getPlayerOneType() : common.gameConfig.getPlayerTwoType();
         gameInfo = gameInfoPanel.getGameInfo();
         game = new Game(gameInfo, board, block, nextBlock, droppedBlocks);
         isAI = gameInfo.getPlayerType() == 1;
@@ -257,7 +259,7 @@ public class Board extends JPanel implements ActionListener {
 
         int leftCounter = 0;
         int loopBreaker1 = 0;
-        while (block.getX() > bestMove.getCol() && leftCounter < 2 && loopBreaker1 < gameConfig.getFieldWidth() / 2) {
+        while (block.getX() > bestMove.getCol() && leftCounter < 2 && loopBreaker1 < common.gameConfig.getFieldWidth() / 2) {
             game.moveBlockLeft();
             Play.soundManager.playSound("move.wav");
             if (Math.abs(bestMove.getCol() - block.getX()) == 1) {
@@ -268,7 +270,7 @@ public class Board extends JPanel implements ActionListener {
 
         int rightCounter = 0;
         int loopBreaker2 = 0;
-        while (block.getX() < bestMove.getCol() && rightCounter < 2 && loopBreaker2 < gameConfig.getFieldWidth() / 2) {
+        while (block.getX() < bestMove.getCol() && rightCounter < 2 && loopBreaker2 < common.gameConfig.getFieldWidth() / 2) {
             game.moveBlockRight();
             Play.soundManager.playSound("move.wav");
             if (Math.abs(bestMove.getCol() - block.getX()) == 1) {
@@ -296,7 +298,7 @@ public class Board extends JPanel implements ActionListener {
     public void moveBlockExternalPlayer() throws IOException {
         externalPlayerController.establishConnection();
 
-        PureGame puregame = new PureGame(gameConfig.getFieldHeight(), gameConfig.getFieldWidth());
+        PureGame puregame = new PureGame(common.gameConfig.getFieldHeight(), common.gameConfig.getFieldWidth());
         puregame.setCells(board);
         puregame.setCurrentShape(block.getBlockInfo().getShape());
         puregame.setNextShape(nextBlock.getBlockInfo().getShape());

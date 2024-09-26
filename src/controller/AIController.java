@@ -4,6 +4,8 @@ import Common.Common;
 import model.Block;
 import model.Move;
 
+import static view.MainScreen.common;
+
 public class AIController {
     private final BoardEvaluator evaluator = new BoardEvaluator();
 
@@ -15,7 +17,7 @@ public class AIController {
         int bestScore = Integer.MIN_VALUE;
 
         for (int rotation = 0; rotation < 4; rotation++) {
-            for(int col = 0; col < Common.gameConfig.getFieldWidth(); col++) {
+            for(int col = 0; col < common.gameConfig.getFieldWidth(); col++) {
                 Block simulatedBlock = new Block(block);
                 simulatedBlock.rotate();
 

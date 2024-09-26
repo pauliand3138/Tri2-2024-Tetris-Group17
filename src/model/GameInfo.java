@@ -2,6 +2,8 @@ package model;
 
 import Common.Common;
 
+import static view.MainScreen.common;
+
 public class GameInfo {
     private int score;
     private int initLevel;
@@ -15,7 +17,7 @@ public class GameInfo {
         this.playerNum = playerNum;
         this.playerType = playerType;
         this.score = 0;
-        this.initLevel = Common.gameConfig.getGameLevel();
+        this.initLevel = common.gameConfig.getGameLevel();
         this.currLevel = initLevel;
         this.lineErased = 0;
         this.nextBlock = null;

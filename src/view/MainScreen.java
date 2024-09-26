@@ -1,39 +1,36 @@
 package view;
 
+import Common.Common;
 import view.panel.TetrisHighScoreScreen;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 
-
-public class TetrisMainScreen extends JFrame {
-
+public class MainScreen extends JFrame {
+    public static Common common;
     private Image backgroundImage;
 
-    public TetrisMainScreen() {
+    public MainScreen() {
         setTitle("Tetris Main Screen"); //window title
         setSize(550, 700); //size of the window
-
         // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
         backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\resources\\image\\Space Theme.jpg"); //loading background image.
-
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         //center application
         setLocationRelativeTo(null);
-
         //layout manager
         setLayout(new BorderLayout());
-
         //adding components etc.,
         setupMainScreen(this);
-
+        common = Common.getInstance();
+        loadGameConfig();
         }
 
-        public void setupMainScreen(TetrisMainScreen tetrisMainScreen){
+        public void setupMainScreen(MainScreen mainScreen){
 
         JPanel backgroundPanel = new JPanel(){
             @Override
@@ -143,7 +140,7 @@ public class TetrisMainScreen extends JFrame {
                 game.startGame();
                  */
                 Play playScreen = new Play();
-                tetrisMainScreen.setVisible(false);
+                mainScreen.setVisible(false);
                 playScreen.setVisible(true);
             }
         });
@@ -159,7 +156,7 @@ public class TetrisMainScreen extends JFrame {
                 configScreen.show();
                  */
                 Configuration configScreen = new Configuration();
-                tetrisMainScreen.setVisible(false);
+                mainScreen.setVisible(false);
                 configScreen.setVisible(true);
 
             }
@@ -176,7 +173,7 @@ public class TetrisMainScreen extends JFrame {
                 highScoresScreen.show();
                  */
                 TetrisHighScoreScreen highScoreScreen = new TetrisHighScoreScreen();
-                tetrisMainScreen.setVisible(false);
+                mainScreen.setVisible(false);
                 highScoreScreen.setVisible(true);
             }
         });
@@ -245,9 +242,18 @@ public class TetrisMainScreen extends JFrame {
         return label;
     }
 
+    public static void loadGameConfig() {
+        try {
+            common.setGameConfig(common.getGameConfig().readGameConfigFile());
+        } catch (FileNotFoundException e) {
+            common.getGameConfig().resetGameConfig();
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
         //main window instance
-        TetrisMainScreen mainWindow = new TetrisMainScreen();
+        MainScreen mainWindow = new MainScreen();
 
         mainWindow.setVisible(true); //making window visible
     }

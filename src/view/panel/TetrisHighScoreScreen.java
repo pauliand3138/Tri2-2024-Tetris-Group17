@@ -1,6 +1,6 @@
 package view.panel;
 
-import view.TetrisMainScreen;
+import view.MainScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,7 +80,7 @@ public class TetrisHighScoreScreen extends JFrame {
                 System.out.println("Back button pressed. Going back to main menu...");
 
                 setVisible(false);
-                TetrisMainScreen mainScreen = new TetrisMainScreen();
+                MainScreen mainScreen = new MainScreen();
                 mainScreen.setVisible(true);
             }
         });

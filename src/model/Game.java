@@ -5,6 +5,8 @@ import view.Play;
 
 import java.awt.*;
 
+import static view.MainScreen.common;
+
 public class Game {
     private GameConfig gameConfig;
     private GameInfo gameInfo;
@@ -16,7 +18,7 @@ public class Game {
     private boolean isGameOver = false;
 
     public Game(GameInfo gameInfo, int[][] board, Block currentBlock, Block nextBlock, Color[][] droppedBlocks) {
-        this.gameConfig = Common.gameConfig;
+        this.gameConfig = common.gameConfig;
         this.gameInfo = gameInfo;
         this.board = board;
         this.currentBlock = currentBlock;

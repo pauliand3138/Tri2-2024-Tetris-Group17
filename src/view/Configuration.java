@@ -13,6 +13,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 
+import static view.MainScreen.common;
+
 public class Configuration extends JFrame {
 
     public Configuration() {
@@ -39,13 +41,13 @@ public class Configuration extends JFrame {
         // Width
         JLabel widthLabel = new JLabel("Field Width (No of cells):");
         widthLabel.setHorizontalAlignment(JLabel.CENTER);
-        JSlider widthSlider = new JSlider(5, 15, Common.gameConfig.getFieldWidth());
+        JSlider widthSlider = new JSlider(5, 15, common.gameConfig.getFieldWidth());
         JLabel widthValue = new JLabel("" + widthSlider.getValue());
         widthValue.setFont(VALUE_FONT);
         widthSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 widthValue.setText("" + widthSlider.getValue());
-                Common.gameConfig.setFieldWidth(widthSlider.getValue());
+                common.gameConfig.setFieldWidth(widthSlider.getValue());
             }
         });
         widthSlider.setPaintTrack(true);
@@ -58,13 +60,13 @@ public class Configuration extends JFrame {
         // Height
         JLabel heightLabel = new JLabel("Field Height (No of cells):");
         heightLabel.setHorizontalAlignment(JLabel.CENTER);
-        JSlider heightSlider = new JSlider(15, 30, Common.gameConfig.getFieldHeight());
+        JSlider heightSlider = new JSlider(15, 30, common.gameConfig.getFieldHeight());
         JLabel heightValue = new JLabel("" + heightSlider.getValue());
         heightValue.setFont(VALUE_FONT);
         heightSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 heightValue.setText("" + heightSlider.getValue());
-                Common.gameConfig.setFieldHeight(heightSlider.getValue());
+                common.gameConfig.setFieldHeight(heightSlider.getValue());
             }
         });
         heightSlider.setPaintTrack(true);
@@ -77,13 +79,13 @@ public class Configuration extends JFrame {
         // Game Level
         JLabel gameLevelLabel = new JLabel("Game Level:");
         gameLevelLabel.setHorizontalAlignment(JLabel.CENTER);
-        JSlider gameLevelSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, Common.gameConfig.getGameLevel());
+        JSlider gameLevelSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, common.gameConfig.getGameLevel());
         JLabel gameLevelValue = new JLabel("" + gameLevelSlider.getValue());
         gameLevelValue.setFont(VALUE_FONT);
         gameLevelSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 gameLevelValue.setText("" + gameLevelSlider.getValue());
-                Common.gameConfig.setGameLevel(gameLevelSlider.getValue());
+                common.gameConfig.setGameLevel(gameLevelSlider.getValue());
             }
         });
         gameLevelSlider.setPaintTrack(true);
@@ -96,13 +98,13 @@ public class Configuration extends JFrame {
         // Music Toggle
         JLabel musicLabel = new JLabel("Music (On/Off):");
         musicLabel.setHorizontalAlignment(JLabel.CENTER);
-        JCheckBox musicCheckBox = new JCheckBox("",Common.gameConfig.isMusic());
+        JCheckBox musicCheckBox = new JCheckBox("",common.gameConfig.isMusic());
         JLabel musicValue = new JLabel(musicCheckBox.isSelected() ? "On" : "Off");
         musicValue.setFont(VALUE_FONT);
         musicCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 musicValue.setText(musicCheckBox.isSelected() ? "On" : "Off");
-                Common.gameConfig.setMusic(musicCheckBox.isSelected());
+                common.gameConfig.setMusic(musicCheckBox.isSelected());
             }
         });
 
@@ -110,13 +112,13 @@ public class Configuration extends JFrame {
         // Sound Toggle
         JLabel soundLabel = new JLabel("Sound Effect (On/Off):");
         soundLabel.setHorizontalAlignment(JLabel.CENTER);
-        JCheckBox soundCheckBox = new JCheckBox("", Common.gameConfig.isSoundEffect());
+        JCheckBox soundCheckBox = new JCheckBox("", common.gameConfig.isSoundEffect());
         JLabel soundValue = new JLabel(soundCheckBox.isSelected() ? "On" : "Off");
         soundValue.setFont(VALUE_FONT);
         soundCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 soundValue.setText(soundCheckBox.isSelected() ? "On" : "Off");
-                Common.gameConfig.setSoundEffect(soundCheckBox.isSelected());
+                common.gameConfig.setSoundEffect(soundCheckBox.isSelected());
             }
         });
 
@@ -137,7 +139,7 @@ public class Configuration extends JFrame {
         p1Buttons.add(p1Human);
         p1Buttons.add(p1Ai);
         p1Buttons.add(p1External);
-        int p1Enabled = Common.gameConfig.getPlayerOneType();
+        int p1Enabled = common.gameConfig.getPlayerOneType();
         if (p1Enabled == 0) {
             p1Human.setSelected(true);
         } else if (p1Enabled == 1) {
@@ -148,21 +150,21 @@ public class Configuration extends JFrame {
         p1Human.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerOneType(0);
+                    common.gameConfig.setPlayerOneType(0);
                 }
             }
         });
         p1Ai.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerOneType(1);
+                    common.gameConfig.setPlayerOneType(1);
                 }
             }
         });
         p1External.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerOneType(2);
+                    common.gameConfig.setPlayerOneType(2);
                 }
             }
         });
@@ -184,7 +186,7 @@ public class Configuration extends JFrame {
         p2Buttons.add(p2Human);
         p2Buttons.add(p2Ai);
         p2Buttons.add(p2External);
-        int p2Enabled = Common.gameConfig.getPlayerTwoType();
+        int p2Enabled = common.gameConfig.getPlayerTwoType();
         if (p2Enabled == 0) {
             p2Human.setSelected(true);
         } else if (p2Enabled == 1) {
@@ -195,14 +197,14 @@ public class Configuration extends JFrame {
         p2Human.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerTwoType(0);
+                    common.gameConfig.setPlayerTwoType(0);
                 }
             }
         });
         p2Ai.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerTwoType(1);
+                    common.gameConfig.setPlayerTwoType(1);
                 }
             }
         });
@@ -210,7 +212,7 @@ public class Configuration extends JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Common.gameConfig.setPlayerTwoType(2);
+                    common.gameConfig.setPlayerTwoType(2);
                 }
             }
         });
@@ -218,7 +220,7 @@ public class Configuration extends JFrame {
         // Extend Mode Toggle
         JLabel extendLabel = new JLabel("Extend Mode (On/Off):");
         extendLabel.setHorizontalAlignment(JLabel.CENTER);
-        JCheckBox extendCheckBox = new JCheckBox("", Common.gameConfig.isExtendMode());
+        JCheckBox extendCheckBox = new JCheckBox("", common.gameConfig.isExtendMode());
         JLabel extendValue = new JLabel(extendCheckBox.isSelected() ? "On" : "Off");
         extendValue.setFont(VALUE_FONT);
         extendCheckBox.addActionListener(new ActionListener() {
@@ -226,7 +228,7 @@ public class Configuration extends JFrame {
                 extendValue.setText(extendCheckBox.isSelected() ? "On" : "Off");
                 if (!extendCheckBox.isSelected()) {
                     p2Human.setSelected(true);
-                    Common.gameConfig.setPlayerTwoType(0);
+                    common.gameConfig.setPlayerTwoType(0);
                     p2Human.setEnabled(false);
                     p2Ai.setEnabled(false);
                     p2External.setEnabled(false);
@@ -235,7 +237,7 @@ public class Configuration extends JFrame {
                     p2Ai.setEnabled(true);
                     p2External.setEnabled(true);
                 }
-                Common.gameConfig.setExtendMode(extendCheckBox.isSelected());
+                common.gameConfig.setExtendMode(extendCheckBox.isSelected());
             }
         });
         if (!extendCheckBox.isSelected()) {
@@ -297,12 +299,12 @@ public class Configuration extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Back button pressed. Going back to main menu...");
                 try {
-                    Common.gameConfig.writeGameConfigFile(Common.gameConfig);
+                    common.gameConfig.writeGameConfigFile(common.gameConfig);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
                 setVisible(false);
-                TetrisMainScreen mainScreen = new TetrisMainScreen();
+                MainScreen mainScreen = new MainScreen();
                 mainScreen.setVisible(true);
             }
         });

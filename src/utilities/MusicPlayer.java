@@ -7,6 +7,8 @@ import javazoom.jl.player.Player;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import static view.MainScreen.common;
+
 public class MusicPlayer implements Runnable {
     private Player player;
     private boolean isPaused;
@@ -14,7 +16,7 @@ public class MusicPlayer implements Runnable {
     private boolean repeat;
 
     public MusicPlayer() {
-        this.isPaused = !Common.gameConfig.isMusic();
+        this.isPaused = !common.gameConfig.isMusic();
         this.isStopped = false;
         this.repeat = true;
     }
@@ -61,7 +63,6 @@ public class MusicPlayer implements Runnable {
     public synchronized void resume() {
         isPaused = false;
     }
-
     public synchronized void stop() {
         isStopped = true;
         player.close();
@@ -73,7 +74,6 @@ public class MusicPlayer implements Runnable {
     public void setPaused(boolean isPaused) {
         this.isPaused = isPaused;
     }
-
     public boolean isPaused() {
         return isPaused;
     }

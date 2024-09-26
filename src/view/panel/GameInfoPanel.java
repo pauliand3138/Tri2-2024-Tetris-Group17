@@ -6,11 +6,13 @@ import model.GameInfo;
 import javax.swing.*;
 import java.awt.*;
 
+import static view.MainScreen.common;
+
 public class GameInfoPanel extends JPanel {
     private JLabel gameInfoLabel;
     private JLabel playerTypeLabel;
     private JLabel initLevelLabel;
-    private JLabel currLevelLabel = new JLabel("Current Level: " + Common.gameConfig.getGameLevel());;
+    private JLabel currLevelLabel = new JLabel("Current Level: " + common.gameConfig.getGameLevel());;
     private JLabel lineErasedLabel = new JLabel("Line Erased: " + "0");;
     private JLabel scoreLabel = new JLabel("Score: " + "0");
     private JLabel nextTetrominoLabel;
@@ -36,10 +38,10 @@ public class GameInfoPanel extends JPanel {
         playerTypeLabel = new JLabel("Player Type: " + playerTypeString);
         playerTypeLabel.setHorizontalAlignment(JLabel.CENTER);
         textPanel.add(playerTypeLabel);
-        initLevelLabel = new JLabel("Initial Level: " + Common.gameConfig.getGameLevel());
+        initLevelLabel = new JLabel("Initial Level: " + common.gameConfig.getGameLevel());
         initLevelLabel.setHorizontalAlignment(JLabel.CENTER);
         textPanel.add(initLevelLabel);
-        currLevelLabel = new JLabel("Current Level: " + Common.gameConfig.getGameLevel());
+        currLevelLabel = new JLabel("Current Level: " + common.gameConfig.getGameLevel());
         currLevelLabel.setHorizontalAlignment(JLabel.CENTER);
         textPanel.add(currLevelLabel);
         lineErasedLabel = new JLabel("Line Erased: " + "0");
