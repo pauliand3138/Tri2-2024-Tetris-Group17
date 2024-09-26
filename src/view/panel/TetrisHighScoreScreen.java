@@ -58,6 +58,16 @@ public class TetrisHighScoreScreen extends JFrame {
 
         List<PlayerScore> playerScores = readJsonFile();
 
+        int playerCount = playerScores.size();
+        int MAX_PLAYERS = 10;
+
+        if(playerCount != MAX_PLAYERS){
+            // If there aren't enough players fill the remaining with dummy info
+            for(int i = 0; i < MAX_PLAYERS - playerCount ; i++){
+                playerScores.add(new PlayerScore("----", 0, 3));
+            }
+        }
+
         createPlayerLabels(playerScores);
 
         float titlePanelPct = 0.20F;
@@ -113,23 +123,13 @@ public class TetrisHighScoreScreen extends JFrame {
             if(firstLine != null){
                 PlayerScore[] players = gson.fromJson(firstLine, PlayerScore[].class);
                 playersList = Arrays.asList(players);
-                playersList.sort((a, b) -> Integer.compare(b.score(), a.score()));
+                playersList.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
             }
 
             fileReader.close();
         }catch(IOException e){
             System.out.println("Leader board json file cannot be read.");
             System.exit(0);
-        }
-
-        int playerCount = playersList.size();
-        int MAX_PLAYERS = 10;
-
-        if(playerCount != MAX_PLAYERS){
-            // If there aren't enough players fill the remaining with dummy info
-            for(int i = 0; i < MAX_PLAYERS - playerCount ; i++){
-                playersList.add(new PlayerScore("----", 0, 0));
-            }
         }
         return playersList;
     }
@@ -163,16 +163,18 @@ public class TetrisHighScoreScreen extends JFrame {
 
         for (PlayerScore playerScore : playerScores) {
             playerScoreLabels.add(new JLabel("(" + playerNumber + ") "));
-            playerScoreLabels.add(new JLabel(playerScore.name()));
-            playerScoreLabels.add(new JLabel(String.valueOf(playerScore.score())));
+            playerScoreLabels.add(new JLabel(playerScore.getName()));
+            playerScoreLabels.add(new JLabel(String.valueOf(playerScore.getScore())));
             String configurationType;
-            int playerConfig = playerScore.config();
+            int playerConfig = playerScore.getConfig();
             if(playerConfig == 0){
                 configurationType = "Human";
             }else if(playerConfig == 1){
                 configurationType = "AI";
-            }else{
+            }else if(playerConfig == 2){
                 configurationType = "External";
+            }else{
+                configurationType = "----";
             }
             playerScoreLabels.add(new JLabel(configurationType));
             playerNumber++;
@@ -190,10 +192,9 @@ public class TetrisHighScoreScreen extends JFrame {
             FileWriter fileWriter = new FileWriter("leaderboard.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
             ArrayList<PlayerScore> players = new ArrayList<>();
-            int[] configTypes = {0, 1, 2};
             for(int i = 1 ; i <= 10 ; i++){
                 Random random = new Random();
-                int index = random.nextInt(configTypes.length);
+                int index = random.nextInt(3);
                 PlayerScore player = new PlayerScore("Player " + i, (int) (Math.random() * 100), index);
                 players.add(player);
             }

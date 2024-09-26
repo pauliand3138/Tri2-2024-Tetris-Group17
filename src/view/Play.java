@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -353,39 +355,72 @@ public class Play extends JFrame {
         if(players.isEmpty()){
             // Add players to leaderboard
             for(GameInfoPanel panel : gameInfoPanel){
-                addPlayerToLeaderboard(panel.getGameInfo());
+                if(panel != null){
+                    addPlayerToLeaderboard(panel.getGameInfo());
+                }
             }
         }else{
+            System.out.println("Start - comparing player scores to current player score");
             for(GameInfoPanel panel : gameInfoPanel){
-                GameInfo gameInfo = panel.getGameInfo();
-                int score = gameInfo.getScore();
-                for(PlayerScore player : players){
-                    if(score > player.score()){
+                if(panel != null) {
+                    GameInfo gameInfo = panel.getGameInfo();
+                    int score = gameInfo.getScore();
+                    if (playerScoreIsOnLeaderboard(score, ((List<PlayerScore>) players))) {
+                        System.out.println("The player will be added to the leaderboard");
                         addPlayerToLeaderboard(gameInfo);
-                        break;
                     }
                 }
             }
         }
     }
-
+    private boolean playerScoreIsOnLeaderboard(int score, List<PlayerScore> players){
+        for(PlayerScore player : players){
+            if(score > player.getScore()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void addPlayerToLeaderboard(GameInfo gameInfo){
+        System.out.println("Adding player to leaderboard");
         int playerNum = gameInfo.getPlayerNum();
         String name = JOptionPane.showInputDialog("Player " + playerNum + "'s score is on the highscore leaderboard, please enter your name Player " + playerNum + ": " );
         int score = gameInfo.getScore();
         int playerType = gameInfo.getPlayerType();
         var playerScores = TetrisHighScoreScreen.readJsonFile();
         try{
-            playerScores.add(new PlayerScore(name, score, playerType));
-            playerScores.sort((a, b) -> Integer.compare(b.score(), a.score()));
+            List<PlayerScore> players = new ArrayList<>(playerScores);
 
-            if(playerScores.size() > 10){
-                playerScores.removeLast();
+            boolean playerAlreadyExits = false;
+
+            for(PlayerScore playerScore : players){
+                /*
+                *
+                *   Check if the player is already on the leaderboard
+                *
+                * */
+                if(playerScore.getName().equals(name)){
+                    playerScore.setScore(score);
+                    playerAlreadyExits = true;
+                }
             }
+            // If the player isn't already on the leaderboard then add them
+            if(!playerAlreadyExits){
+                players.add(new PlayerScore(name, score, playerType));
+            }
+
+            // sort the players then remove the last player if there are more than 10 on the leaderboard
+            players.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+
+            if(players.size() > 10){
+                players.removeLast();
+            }
+            Gson gson = new Gson();
             FileWriter fileWriter = new FileWriter("leaderboard.json");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(new Gson().toJson(playerScores));
+            bufferedWriter.flush();
+            bufferedWriter.write(gson.toJson(players));
             fileWriter.close();
 
         }catch (IOException e) {
