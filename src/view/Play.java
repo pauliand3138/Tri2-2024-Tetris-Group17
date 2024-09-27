@@ -2,8 +2,7 @@ package view;
 
 import Common.Common;
 import controller.GameController;
-import utilities.MusicPlayer;
-import utilities.SoundEffectManager;
+import utilities.*;
 import view.panel.Board;
 import view.panel.GameInfoPanel;
 import view.panel.ScrollingTextPanel;
@@ -88,8 +87,8 @@ public class Play extends JFrame {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         JPanel titlePanel = new JPanel();
         titlePanel.setSize(width, 0);
-        JLabel titleLabel = new JLabel("Tetris");
-        titleLabel.setFont(new Font("Calibri", Font.BOLD, 20));
+        LabelFactory titleFactory = new TitleLabelFactory();
+        JLabel titleLabel = titleFactory.createLabel("Tetris");
         titlePanel.add(titleLabel);
 
         JPanel bottomTitlePanel = new JPanel();

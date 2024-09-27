@@ -1,6 +1,7 @@
 package view;
 
 import Common.Common;
+import utilities.*;
 import view.panel.ScrollingTextPanel;
 
 import javax.swing.*;
@@ -18,89 +19,61 @@ import static view.MainScreen.common;
 public class Configuration extends JFrame {
 
     public Configuration() {
-        Font VALUE_FONT = new Font("Calibri", Font.BOLD, 16);
-
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1080, 720);
         setLocationRelativeTo(null);
 
+        LabelFactory titleFactory = new TitleLabelFactory();
+        JLabel titleLabel = titleFactory.createLabel("Configuration");
+
         JPanel titlePanel = new JPanel();
-        JLabel titleLabel = new JLabel("view.Configuration");
-        titleLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         titlePanel.add(titleLabel);
 
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(8, 3, 15, 0));
 
-//        JPanel buttonPanel = new JPanel();
-//        buttonPanel.setLayout(new GridLayout(2, 1, 0, 5));
-
-
+        LabelFactory subtitleFactory = new SubtitleLabelFactory();
 
         // Width
-        JLabel widthLabel = new JLabel("Field Width (No of cells):");
-        widthLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel widthLabel = subtitleFactory.createLabel("Field Width (No of cells):");
         JSlider widthSlider = new JSlider(5, 15, common.gameConfig.getFieldWidth());
-        JLabel widthValue = new JLabel("" + widthSlider.getValue());
-        widthValue.setFont(VALUE_FONT);
+        JLabel widthValue = subtitleFactory.createLabel("" + widthSlider.getValue());
         widthSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 widthValue.setText("" + widthSlider.getValue());
                 common.gameConfig.setFieldWidth(widthSlider.getValue());
             }
         });
-        widthSlider.setPaintTrack(true);
-        widthSlider.setPaintTicks(true);
-        widthSlider.setPaintLabels(true);
-        widthSlider.setMajorTickSpacing(1);
-        widthSlider.setMinorTickSpacing(5);
-
+        sliderDesign(widthSlider);
 
         // Height
-        JLabel heightLabel = new JLabel("Field Height (No of cells):");
-        heightLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel heightLabel = subtitleFactory.createLabel("Field Height (No of cells):");
         JSlider heightSlider = new JSlider(15, 30, common.gameConfig.getFieldHeight());
-        JLabel heightValue = new JLabel("" + heightSlider.getValue());
-        heightValue.setFont(VALUE_FONT);
+        JLabel heightValue = subtitleFactory.createLabel("" + heightSlider.getValue());
         heightSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 heightValue.setText("" + heightSlider.getValue());
                 common.gameConfig.setFieldHeight(heightSlider.getValue());
             }
         });
-        heightSlider.setPaintTrack(true);
-        heightSlider.setPaintTicks(true);
-        heightSlider.setPaintLabels(true);
-        heightSlider.setMajorTickSpacing(1);
-        heightSlider.setMinorTickSpacing(5);
-
+        sliderDesign(heightSlider);
 
         // Game Level
-        JLabel gameLevelLabel = new JLabel("Game Level:");
-        gameLevelLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel gameLevelLabel = subtitleFactory.createLabel("Game Level:");
         JSlider gameLevelSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, common.gameConfig.getGameLevel());
-        JLabel gameLevelValue = new JLabel("" + gameLevelSlider.getValue());
-        gameLevelValue.setFont(VALUE_FONT);
+        JLabel gameLevelValue = subtitleFactory.createLabel("" + gameLevelSlider.getValue());
         gameLevelSlider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 gameLevelValue.setText("" + gameLevelSlider.getValue());
                 common.gameConfig.setGameLevel(gameLevelSlider.getValue());
             }
         });
-        gameLevelSlider.setPaintTrack(true);
-        gameLevelSlider.setPaintTicks(true);
-        gameLevelSlider.setPaintLabels(true);
-        gameLevelSlider.setMajorTickSpacing(1);
-        gameLevelSlider.setMinorTickSpacing(5);
-
+        sliderDesign(gameLevelSlider);
 
         // Music Toggle
-        JLabel musicLabel = new JLabel("Music (On/Off):");
-        musicLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel musicLabel = subtitleFactory.createLabel("Music (On/Off):");
         JCheckBox musicCheckBox = new JCheckBox("",common.gameConfig.isMusic());
-        JLabel musicValue = new JLabel(musicCheckBox.isSelected() ? "On" : "Off");
-        musicValue.setFont(VALUE_FONT);
+        JLabel musicValue = subtitleFactory.createLabel(musicCheckBox.isSelected() ? "On" : "Off");
         musicCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 musicValue.setText(musicCheckBox.isSelected() ? "On" : "Off");
@@ -108,13 +81,10 @@ public class Configuration extends JFrame {
             }
         });
 
-
         // Sound Toggle
-        JLabel soundLabel = new JLabel("Sound Effect (On/Off):");
-        soundLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel soundLabel = subtitleFactory.createLabel("Sound Effect (On/Off):");
         JCheckBox soundCheckBox = new JCheckBox("", common.gameConfig.isSoundEffect());
-        JLabel soundValue = new JLabel(soundCheckBox.isSelected() ? "On" : "Off");
-        soundValue.setFont(VALUE_FONT);
+        JLabel soundValue = subtitleFactory.createLabel(soundCheckBox.isSelected() ? "On" : "Off");
         soundCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 soundValue.setText(soundCheckBox.isSelected() ? "On" : "Off");
@@ -122,7 +92,7 @@ public class Configuration extends JFrame {
             }
         });
 
-        JLabel p1Label = new JLabel("Player One Type:");
+        JLabel p1Label = subtitleFactory.createLabel("Player One Type:");
         p1Label.setHorizontalAlignment(JLabel.CENTER);
         ButtonGroup p1 = new ButtonGroup();
         JRadioButton p1Human = new JRadioButton();
@@ -169,7 +139,7 @@ public class Configuration extends JFrame {
             }
         });
 
-        JLabel p2Label = new JLabel("Player Two Type:");
+        JLabel p2Label = subtitleFactory.createLabel("Player Two Type:");
         p2Label.setHorizontalAlignment(JLabel.CENTER);
         ButtonGroup p2 = new ButtonGroup();
         JRadioButton p2Human = new JRadioButton();
@@ -218,11 +188,9 @@ public class Configuration extends JFrame {
         });
 
         // Extend Mode Toggle
-        JLabel extendLabel = new JLabel("Extend Mode (On/Off):");
-        extendLabel.setHorizontalAlignment(JLabel.CENTER);
+        JLabel extendLabel = subtitleFactory.createLabel("Extend Mode (On/Off):");
         JCheckBox extendCheckBox = new JCheckBox("", common.gameConfig.isExtendMode());
-        JLabel extendValue = new JLabel(extendCheckBox.isSelected() ? "On" : "Off");
-        extendValue.setFont(VALUE_FONT);
+        JLabel extendValue = subtitleFactory.createLabel(extendCheckBox.isSelected() ? "On" : "Off");
         extendCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 extendValue.setText(extendCheckBox.isSelected() ? "On" : "Off");
@@ -319,6 +287,15 @@ public class Configuration extends JFrame {
         add(creatorsPanel, BorderLayout.SOUTH);
 
     }
+
+    private static void sliderDesign(JSlider slider) {
+        slider.setPaintTrack(true);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setMajorTickSpacing(1);
+        slider.setMinorTickSpacing(5);
+    }
+
     public static void main(String[] args) {
         Configuration c = new Configuration();
         c.setVisible(true);

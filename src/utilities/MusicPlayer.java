@@ -1,6 +1,5 @@
 package utilities;
 
-import Common.Common;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
@@ -31,6 +30,7 @@ public class MusicPlayer implements Runnable {
             System.out.println("Error playing the BGM file: " + e.getMessage());
         }
     }
+
     @Override
     public void run() {
         do {

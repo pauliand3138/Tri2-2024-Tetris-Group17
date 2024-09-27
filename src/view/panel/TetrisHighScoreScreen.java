@@ -1,5 +1,7 @@
 package view.panel;
 
+import utilities.*;
+import utilities.LabelFactory;
 import view.MainScreen;
 
 import javax.swing.*;
@@ -21,21 +23,24 @@ public class TetrisHighScoreScreen extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        LabelFactory titleFactory = new TitleLabelFactory();
+        JLabel titleLabel = titleFactory.createLabel("High Score");
+
+
         JPanel titlePanel = new JPanel();
-        JLabel titleLabel = new JLabel("High Scores");
-        titleLabel.setFont(new Font("Calibri", Font.BOLD, 24));
         titlePanel.add(titleLabel);
 
         JPanel panel = new JPanel(new GridLayout(11, 2));
 
-        JLabel nameLabel = new JLabel("Name");
-        JLabel scoreLabel = new JLabel("Score");
+        LabelFactory subtitleFactory = new SubtitleLabelFactory();
+        JLabel nameLabel = subtitleFactory.createLabel("Name");
+        JLabel scoreLabel = subtitleFactory.createLabel("Score");
+//
+//        nameLabel.setFont(HEADER_FONT);
+//        scoreLabel.setFont(HEADER_FONT);
 
-        nameLabel.setFont(HEADER_FONT);
-        scoreLabel.setFont(HEADER_FONT);
-
-        centerJLabel(nameLabel);
-        centerJLabel(scoreLabel);
+//        centerJLabel(nameLabel);
+//        centerJLabel(scoreLabel);
 
         panel.add(nameLabel);
         panel.add(scoreLabel);
@@ -47,14 +52,17 @@ public class TetrisHighScoreScreen extends JFrame {
         playerScores.sort((a, b) -> Integer.compare(b.score(), a.score()));
 
         List<JLabel> playerScoreLabels = new ArrayList<>();
+        LabelFactory centerLabelFactory = new CenterLabelFactory();
 
         for (PlayerScore playerScore : playerScores) {
-            playerScoreLabels.add(new JLabel(playerScore.name()));
-            playerScoreLabels.add(new JLabel(String.valueOf(playerScore.score())));
+            JLabel name = centerLabelFactory.createLabel(playerScore.name());
+            JLabel score = centerLabelFactory.createLabel(String.valueOf(playerScore.score()));
+            playerScoreLabels.add(name);
+            playerScoreLabels.add(score);
         }
 
         for(JLabel label : playerScoreLabels) {
-            centerJLabel(label);
+            //centerJLabel(label);
             panel.add(label);
         }
 
@@ -102,10 +110,6 @@ public class TetrisHighScoreScreen extends JFrame {
     private static void run() {
         TetrisHighScoreScreen highScoreScreen = new TetrisHighScoreScreen();
         highScoreScreen.setVisible(true);
-    }
-
-    private static void centerJLabel(JLabel label) {
-        label.setHorizontalAlignment(JLabel.CENTER);
     }
 }
 

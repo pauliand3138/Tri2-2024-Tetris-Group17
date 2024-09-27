@@ -17,7 +17,8 @@ public class MainScreen extends JFrame {
         setTitle("Tetris Main Screen"); //window title
         setSize(550, 700); //size of the window
         // Background image sourced from: https://unsplash.com/photos/the-night-sky-with-stars-and-the-milky-C7zKz_O02ic
-        backgroundImage = Toolkit.getDefaultToolkit().getImage("src\\resources\\image\\Space Theme.jpg"); //loading background image.
+        backgroundImage = Toolkit.getDefaultToolkit().getImage(
+                "src\\resources\\image\\Space Theme.jpg"); //loading background image.
         //close application function
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //center application
@@ -139,8 +140,8 @@ public class MainScreen extends JFrame {
                 e.g., TetrisGameFile game = new TetrisGameFile();
                 game.startGame();
                  */
-                Play playScreen = new Play();
                 mainScreen.setVisible(false);
+                Play playScreen = new Play();
                 playScreen.setVisible(true);
             }
         });
@@ -158,7 +159,6 @@ public class MainScreen extends JFrame {
                 Configuration configScreen = new Configuration();
                 mainScreen.setVisible(false);
                 configScreen.setVisible(true);
-
             }
         });
 
