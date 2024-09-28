@@ -1,5 +1,10 @@
 package model;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 public class GameInfo {
     private final Common common; // Assuming Common is a class
     private int score;
@@ -9,6 +14,7 @@ public class GameInfo {
     private int playerNum;
     private int playerType;
     private Block nextBlock;
+    private List<HighScore> highScores;
 
     public GameInfo(Common common, int playerNum, int playerType) {
         this.common = common;
@@ -19,6 +25,7 @@ public class GameInfo {
         this.currLevel = initLevel;
         this.lineErased = 0;
         this.nextBlock = null;
+        this.highScores = new ArrayList<>();
     }
 
     public int getScore() {
@@ -84,6 +91,22 @@ public class GameInfo {
 
         // Assuming gameInfoPanel is a member of the class or accessible here
         gameInfoPanel.repaint();
+
+        // Check if the score is within the top 10
+        checkHighScore();
+    }
+
+    private void checkHighScore() {
+        if (highScores.size() < 10 || score > highScores.get(highScores.size() - 1).getScore()) {
+            String playerName = JOptionPane.showInputDialog("Congratulations! Enter your name:");
+            if (playerName != null && !playerName.trim().isEmpty()) {
+                highScores.add(new HighScore(playerName, score));
+                highScores.sort(Comparator.comparingInt(HighScore::getScore).reversed());
+                if (highScores.size() > 10) {
+                    highScores.remove(highScores.size() - 1);
+                }
+            }
+        }
     }
 
     public int getPlayerNum() {
@@ -109,5 +132,23 @@ public class GameInfo {
     public void setNextBlock(Block nextBlock) {
         this.nextBlock = nextBlock;
     }
-}
 
+    // Inner class to represent a high score entry
+    private static class HighScore {
+        private final String name;
+        private final int score;
+
+        public HighScore(String name, int score) {
+            this.name = name;
+            this.score = score;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getScore() {
+            return score;
+        }
+    }
+}
