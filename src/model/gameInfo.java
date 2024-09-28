@@ -1,0 +1,113 @@
+package model;
+
+public class GameInfo {
+    private final Common common; // Assuming Common is a class
+    private int score;
+    private int initLevel;
+    private int currLevel;
+    private int lineErased;
+    private int playerNum;
+    private int playerType;
+    private Block nextBlock;
+
+    public GameInfo(Common common, int playerNum, int playerType) {
+        this.common = common;
+        this.playerNum = playerNum;
+        this.playerType = playerType;
+        this.score = 0;
+        this.initLevel = common.gameConfig.getGameLevel();
+        this.currLevel = initLevel;
+        this.lineErased = 0;
+        this.nextBlock = null;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getInitLevel() {
+        return initLevel;
+    }
+
+    public void setInitLevel(int initLevel) {
+        this.initLevel = initLevel;
+    }
+
+    public int getCurrLevel() {
+        return currLevel;
+    }
+
+    public void setCurrLevel(int currLevel) {
+        this.currLevel = currLevel;
+    }
+
+    public int getLineErased() {
+        return lineErased;
+    }
+
+    public void setLineErased(int lineErased) {
+        this.lineErased = lineErased;
+    }
+
+    public void updateGameInfo(int linesCleared) {
+        int scoreIncrement = 0;
+        switch (linesCleared) {
+            case 1:
+                scoreIncrement = 100;
+                break;
+            case 2:
+                scoreIncrement = 300;
+                break;
+            case 3:
+                scoreIncrement = 600;
+                break;
+            case 4:
+                scoreIncrement = 1000;
+                break;
+            default:
+                break;
+        }
+
+        this.setScore(this.getScore() + scoreIncrement);
+
+        int currentLineErased = this.getLineErased();
+        this.setLineErased(currentLineErased + linesCleared);
+        int newLineErased = this.getLineErased();
+
+        if (newLineErased / 10 != currentLineErased / 10) {
+            this.setCurrLevel(this.getCurrLevel() + 1);
+        }
+
+        // Assuming gameInfoPanel is a member of the class or accessible here
+        gameInfoPanel.repaint();
+    }
+
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    public void setPlayerNum(int playerNum) {
+        this.playerNum = playerNum;
+    }
+
+    public int getPlayerType() {
+        return playerType;
+    }
+
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
+
+    public Block getNextBlock() {
+        return nextBlock;
+    }
+
+    public void setNextBlock(Block nextBlock) {
+        this.nextBlock = nextBlock;
+    }
+}
+
