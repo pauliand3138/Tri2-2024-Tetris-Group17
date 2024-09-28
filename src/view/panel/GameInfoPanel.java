@@ -22,8 +22,8 @@ public class GameInfoPanel extends JPanel {
     private GameInfo gameInfo;
     private List<ScoreEntry> highScores;
 
-    public GameInfoPanel(GameInfo gameInfo) {
-        this.gameInfo = gameInfo;
+    public GameInfoPanel(int playerNum, int playerType) {
+        this.gameInfo = new GameInfo(playerNum, playerType);;
         this.highScores = new ArrayList<>();
         initPane();
     }
@@ -66,68 +66,71 @@ public class GameInfoPanel extends JPanel {
         });
     }
 
-    public void clearLines() {
-        boolean completedLine;
-        int linesCleared = 0;
-
-        for (int row = ROW_COUNT - 1; row >= 0; row--) {
-            completedLine = true;
-            for (int col = 0; col < COL_COUNT; col++) {
-                // Check if the line is completed
-                // Assuming there's a method isCellOccupied(row, col) to check if a cell is occupied
-                if (!isCellOccupied(row, col)) {
-                    completedLine = false;
-                    break;
-                }
-            }
-            if (completedLine) {
-                linesCleared++;
-                // Assuming there's a method clearLine(row) to clear the line
-                clearLine(row);
-            }
-        }
-
-        if (linesCleared > 0) {
-            int scoreIncrement;
-            switch (linesCleared) {
-                case 1:
-                    scoreIncrement = 100;
-                    break;
-                case 2:
-                    scoreIncrement = 300;
-                    break;
-                case 3:
-                    scoreIncrement = 600;
-                    break;
-                case 4:
-                    scoreIncrement = 1000;
-                    break;
-                default:
-                    scoreIncrement = 0;
-            }
-            gameInfo.setScore(gameInfo.getScore() + scoreIncrement);
-
-            int currentLineErased = gameInfo.getLineErased();
-            gameInfo.setLineErased(currentLineErased + linesCleared);
-            int newLineErased = gameInfo.getLineErased();
-
-            if (newLineErased / 10 != currentLineErased / 10) {
-                gameInfo.setCurrLevel(gameInfo.getCurrLevel() + 1);
-            }
-
-            updateGameInfo();
-            checkHighScore();
-        }
+    public GameInfo getGameInfo() {
+        return gameInfo;
     }
-
-    private boolean isCellOccupied(int row, int col) {
-        // Implement this method based on your game's logic
-        return false;
-    }
-
-    private void clearLine(int row) {
-        // Implement this method based on your game's logic
-    }
+//    public void clearLines() {
+//        boolean completedLine;
+//        int linesCleared = 0;
+//
+//        for (int row = ROW_COUNT - 1; row >= 0; row--) {
+//            completedLine = true;
+//            for (int col = 0; col < COL_COUNT; col++) {
+//                // Check if the line is completed
+//                // Assuming there's a method isCellOccupied(row, col) to check if a cell is occupied
+//                if (!isCellOccupied(row, col)) {
+//                    completedLine = false;
+//                    break;
+//                }
+//            }
+//            if (completedLine) {
+//                linesCleared++;
+//                // Assuming there's a method clearLine(row) to clear the line
+//                clearLine(row);
+//            }
+//        }
+//
+//        if (linesCleared > 0) {
+//            int scoreIncrement;
+//            switch (linesCleared) {
+//                case 1:
+//                    scoreIncrement = 100;
+//                    break;
+//                case 2:
+//                    scoreIncrement = 300;
+//                    break;
+//                case 3:
+//                    scoreIncrement = 600;
+//                    break;
+//                case 4:
+//                    scoreIncrement = 1000;
+//                    break;
+//                default:
+//                    scoreIncrement = 0;
+//            }
+//            gameInfo.setScore(gameInfo.getScore() + scoreIncrement);
+//
+//            int currentLineErased = gameInfo.getLineErased();
+//            gameInfo.setLineErased(currentLineErased + linesCleared);
+//            int newLineErased = gameInfo.getLineErased();
+//
+//            if (newLineErased / 10 != currentLineErased / 10) {
+//                gameInfo.setCurrLevel(gameInfo.getCurrLevel() + 1);
+//            }
+//
+//            updateGameInfo();
+//            checkHighScore();
+//        }
+//    }
+//
+//    private boolean isCellOccupied(int row, int col) {
+//        // Implement this method based on your game's logic
+//        return false;
+//    }
+//
+//    private void clearLine(int row) {
+//        // Implement this method based on your game's logic
+//    }
 
     private void checkHighScore() {
         int score = gameInfo.getScore();

@@ -125,4 +125,15 @@ public class GameConfig {
     public String toString() {
         return "model.GameConfig{" + "fieldWidth=" + fieldWidth + ", fieldHeight=" + fieldHeight + ", gameLevel=" + gameLevel + ", music=" + music + ", soundEffect=" + soundEffect + ", extendMode=" + extendMode + ", playerOneType=" + playerOneType + ", playerTwoType=" + playerTwoType + '}';
     }
+
+    public GameConfig(GameConfig gameConfig) {
+        this.fieldWidth = gameConfig.getFieldWidth();
+        this.fieldHeight = gameConfig.getFieldHeight();
+        this.gameLevel = gameConfig.getGameLevel();
+        this.music = gameConfig.isMusic();
+        this.soundEffect = gameConfig.isSoundEffect();
+        this.extendMode = gameConfig.isExtendMode();
+        this.playerOneType = gameConfig.getPlayerOneType();
+        this.playerTwoType = gameConfig.getPlayerTwoType();
+    }
 }

@@ -177,6 +177,7 @@ public class Board extends JPanel implements ActionListener {
             } else {
                 Play.gameController[playerNum].getGame().setBlockAsDroppedBlock();
                 Play.gameController[playerNum].getGame().clearLines();
+                gameInfoPanel.updateGameInfo();
                 gameInfoPanel.repaint();
                 Play.gameController[playerNum].getGame().updateBoardArray();
                 if (Play.gameController[playerNum].getGame().isBlockOutside()) {
@@ -195,6 +196,10 @@ public class Board extends JPanel implements ActionListener {
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
+                    }
+                    if(common.scoreList.isHighScore(gameInfo.getScore()) && gameInfo.getScore() > 0) {
+                        String name = javax.swing.JOptionPane.showInputDialog("Player " + (int)(playerNum + 1) + "'s score is in the top scores, please enter " + (int)(playerNum + 1)+ "'s name:");
+                        common.scoreList.addNewScore(common.gameConfig, gameInfo, name);
                     }
                 } else {
                     if (isAI && AIdownTimer != null)

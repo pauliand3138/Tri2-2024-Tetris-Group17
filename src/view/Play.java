@@ -46,8 +46,9 @@ public class Play extends JFrame {
         setVisible(true);
 
         if (isConnectionError) {
-                JOptionPane.showMessageDialog(new JFrame(), "You need to start TetrisServer to use external player mode.", "Error",
+            JOptionPane.showMessageDialog(new JFrame(), "You need to start TetrisServer to use external player mode.", "Error",
                         JOptionPane.ERROR_MESSAGE);
+            isConnectionError = false;
         }
     }
 
