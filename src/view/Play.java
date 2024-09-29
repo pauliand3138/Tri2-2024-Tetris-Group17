@@ -123,7 +123,7 @@ public class Play extends JFrame {
             JPanel tetrisBoardPanel = new JPanel();
             tetrisBoardPanel.setLayout(null);
             board[i] = new Board(common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);
-            gameController[i] = new GameController(board[i].game);
+            gameController[i] = new GameController(board[i].game, soundManager);
             tetrisBoardPanel.add(board[i]);
             innerPanel.add(gameInfoPanel[i], BorderLayout.WEST);
             innerPanel.add(tetrisBoardPanel, BorderLayout.CENTER);
