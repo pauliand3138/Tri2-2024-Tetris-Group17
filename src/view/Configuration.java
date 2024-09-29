@@ -17,6 +17,8 @@ import java.io.IOException;
 import static view.MainScreen.common;
 
 public class Configuration extends JFrame {
+    private int fieldWidth; // Width of the game field
+    private int fieldHeight; // Height of the game field
 
     public Configuration() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -286,6 +288,18 @@ public class Configuration extends JFrame {
         add(gridPanel, BorderLayout.CENTER);
         add(creatorsPanel, BorderLayout.SOUTH);
 
+    }
+
+    public void setFieldWidth(int fieldWidth) {
+        this.fieldWidth = fieldWidth;
+    }
+
+    public void setFieldHeight(int fieldHeight) {
+        this.fieldHeight = fieldHeight;
+    }
+
+    public int getPointsPerLine() {
+        return 100;
     }
 
     private static void sliderDesign(JSlider slider) {

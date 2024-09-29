@@ -2,9 +2,7 @@ package model;
 
 import Common.Common;
 import view.Play;
-
 import java.awt.*;
-
 import static view.MainScreen.common;
 
 public class Game {
@@ -24,6 +22,23 @@ public class Game {
         this.currentBlock = currentBlock;
         this.nextBlock = nextBlock;
         this.droppedBlocks = droppedBlocks;
+    }
+
+    public int getFieldWidth() {
+        return gameConfig.getFieldWidth();
+    }
+
+    public int getFieldHeight() {
+        return gameConfig.getFieldHeight();
+    }
+
+    public void setBlockPosition(Block block, int x, int y) {
+        block.setX(x);
+        block.setY(y);
+    }
+
+    public int getScore() {
+        return gameInfo.getScore();
     }
 
     public boolean isBlockOutside() {
