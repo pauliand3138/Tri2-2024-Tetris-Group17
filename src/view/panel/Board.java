@@ -174,7 +174,7 @@ public class Board extends JPanel implements ActionListener {
                 }
             } else {
                 Play.gameController[playerNum].getGame().setBlockAsDroppedBlock();
-                Play.gameController[playerNum].getGame().clearLines();
+                Play.gameController[playerNum].clearLines();
                 gameInfoPanel.updateGameInfo();
                 gameInfoPanel.repaint();
                 Play.gameController[playerNum].getGame().updateBoardArray();
@@ -186,7 +186,7 @@ public class Board extends JPanel implements ActionListener {
                     isGameOver = true;
                     System.out.println("Game Over");
                     timer.stop();
-                    Play.soundManager.playSound("gameover.wav");
+                    Play.gameController[playerNum].gameOver();
                     if (Play.isAllGameEnded()) {
                         try {
                             Thread.sleep(100);

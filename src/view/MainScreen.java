@@ -1,14 +1,12 @@
 package view;
 
 import Common.Common;
-import view.panel.TetrisHighScoreScreen;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class MainScreen extends JFrame {
     public static Common common;
@@ -254,11 +252,7 @@ public class MainScreen extends JFrame {
     }
 
     public static void loadHighScore() {
-        try {
-            common.setScoreList(common.getScoreList().getScoreList());
-        } catch (IOException e) {
-            System.out.println("High score file not found, attempting to create one...");
-        }
+        common.setScoreList(common.getScoreList().getScoreList());
     }
 
     public static void main(String[] args) {

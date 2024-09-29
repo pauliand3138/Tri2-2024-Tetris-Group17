@@ -43,7 +43,7 @@ public class Game {
     public void moveBlockRight() {
         if (currentBlock != null && !isPaused && !isReachedRight()) {
             currentBlock.moveRight();
-            Play.soundManager.playSound("move.wav");
+            //Play.soundManager.playSound("move.wav");
         }
     }
 
@@ -71,7 +71,7 @@ public class Game {
     public void moveBlockLeft() {
         if (currentBlock != null && !isPaused && !isReachedLeft()) {
             currentBlock.moveLeft();
-            Play.soundManager.playSound("move.wav");
+            //Play.soundManager.playSound("move.wav");
         }
     }
 
@@ -134,11 +134,11 @@ public class Game {
                 currentBlock.setX(gameConfig.getFieldWidth() - currentBlock.getBlockInfo().getColumns());
             if ((int) (currentBlock.getBlockInfo().getRows() + currentBlock.getY()) >= gameConfig.getFieldHeight())
                 currentBlock.setY(gameConfig.getFieldHeight() - currentBlock.getBlockInfo().getRows());
-            Play.soundManager.playSound("move.wav");
+            //Play.soundManager.playSound("move.wav");
         }
     }
 
-    public void clearLines() {
+    public boolean clearLines() {
         boolean completedLine = true;
         boolean shouldPlaySound = false;
         int linesCleared = 0;
@@ -163,25 +163,12 @@ public class Game {
             }
         }
 
-        if (shouldPlaySound) {
-            Play.soundManager.playSound("clearline.wav");
-        }
+//        if (shouldPlaySound) {
+//            Play.soundManager.playSound("clearline.wav");
+//        }
+        eraseLineUpdateScore(linesCleared);
 
-        if (linesCleared == 1) {
-            gameInfo.setScore(gameInfo.getScore() + 100);
-        } else if (linesCleared == 2) {
-            gameInfo.setScore(gameInfo.getScore() + 300);
-        } else if (linesCleared == 3) {
-            gameInfo.setScore(gameInfo.getScore() + 600);
-        } else if (linesCleared == 4) {
-            gameInfo.setScore(gameInfo.getScore() + 1000);
-        }
-        int currentLineErased = gameInfo.getLineErased();
-        gameInfo.setLineErased(gameInfo.getLineErased() + linesCleared);
-        int newLineErased = gameInfo.getLineErased();
-        if (newLineErased / 10 != currentLineErased / 10) {
-            gameInfo.setCurrLevel(gameInfo.getCurrLevel() + 1);
-        }
+        return shouldPlaySound;
         //gameInfoPanel.repaint();
     }
 
@@ -222,6 +209,25 @@ public class Game {
 
     public void resumeGame() {
         isPaused = false;
+    }
+
+    public void eraseLineUpdateScore(int linesCleared) {
+        if (linesCleared == 1) {
+            gameInfo.setScore(gameInfo.getScore() + 100);
+        } else if (linesCleared == 2) {
+            gameInfo.setScore(gameInfo.getScore() + 300);
+        } else if (linesCleared == 3) {
+            gameInfo.setScore(gameInfo.getScore() + 600);
+        } else if (linesCleared == 4) {
+            gameInfo.setScore(gameInfo.getScore() + 1000);
+        }
+        int currentLineErased = gameInfo.getLineErased();
+        gameInfo.setLineErased(gameInfo.getLineErased() + linesCleared);
+        int newLineErased = gameInfo.getLineErased();
+        if (newLineErased / 10 != currentLineErased / 10) {
+            gameInfo.setCurrLevel(gameInfo.getCurrLevel() + 1);
+            Play.soundManager.playSound("levelup.wav");
+        }
     }
 
     public void updateBoardArray() {

@@ -19,39 +19,45 @@ public class ScoreList {
     }
 
     public ScoreList readScoreListFile() throws FileNotFoundException {
-        StringBuilder sb = new StringBuilder();
-        try {
-            FileReader reader = new FileReader("TetrisHighScore.json");
-            try {
-                int ch;
-                // Characters found
-                while ((ch = reader.read()) != -1)
-                    sb.append((char)ch);
-                String json = sb.toString();
-                Gson gson = new Gson();
-                ScoreList scoreList = gson.fromJson(json, ScoreList.class);
-                reader.close();
-                //System.out.println(scoreList.scores.getFirst());
-                return scoreList;
-            } catch (Exception e) {
-                try {
-                    reader.close();
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
-                }
-                System.out.println(e.getMessage());
-            }
-        } catch (IOException e) {
-            System.out.println("Reading failed! : " + e.getMessage());
-            return null;
-        } catch (JsonSyntaxException e) {
-            System.out.println("JSON error: " + e.getMessage());
-            return null;
-        }
-        return null;
+//        StringBuilder sb = new StringBuilder();
+//        try {
+//            FileReader reader = new FileReader("TetrisHighScore.json");
+//            try {
+//                int ch;
+//                // Characters found
+//                while ((ch = reader.read()) != -1)
+//                    sb.append((char)ch);
+//                String json = sb.toString();
+//                Gson gson = new Gson();
+//                ScoreList scoreList = gson.fromJson(json, ScoreList.class);
+//                reader.close();
+//                //System.out.println(scoreList.scores.getFirst());
+//                return scoreList;
+//            } catch (Exception e) {
+//                try {
+//                    reader.close();
+//                } catch (Exception ex) {
+//                    System.out.println(ex.getMessage());
+//                }
+//                System.out.println(e.getMessage());
+//            }
+//        } catch (IOException e) {
+//            System.out.println("Reading failed! : " + e.getMessage());
+//            return null;
+//        } catch (JsonSyntaxException e) {
+//            System.out.println("JSON error: " + e.getMessage());
+//            return null;
+//        }
+//        return null;
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        BufferedReader br = new BufferedReader(new FileReader("TetrisHighScore.json"));
+        ScoreList scoreList = gson.fromJson(br, ScoreList.class);
+        return scoreList;
     }
 
-    private static void writeScoreListFile(ScoreList scoreList) throws IOException {
+    public void writeScoreListFile(ScoreList scoreList) throws IOException {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         FileWriter fw = new FileWriter("TetrisHighScore.json");
@@ -59,11 +65,20 @@ public class ScoreList {
         fw.close();
     }
 
-    public ScoreList getScoreList() throws IOException {
-        ScoreList scoreList = readScoreListFile();
+    public ScoreList getScoreList() {
+        ScoreList scoreList = null;
+        try {
+            scoreList = readScoreListFile();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found to read high score.");
+        }
         if (scoreList == null) {
             scoreList = new ScoreList();
-            writeScoreListFile(scoreList);
+            try {
+                writeScoreListFile(scoreList);
+            } catch (IOException e) {
+                System.out.println("Creating file failed!");
+            }
         }
         return scoreList;
     }
