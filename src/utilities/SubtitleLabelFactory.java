@@ -12,3 +12,4 @@ public class SubtitleLabelFactory implements LabelFactory {
         return label;
     }
 }
+

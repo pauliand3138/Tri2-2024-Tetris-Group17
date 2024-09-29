@@ -8,6 +8,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class MainScreen extends JFrame {
     public static Common common;
@@ -29,6 +30,7 @@ public class MainScreen extends JFrame {
         setupMainScreen(this);
         common = Common.getInstance();
         loadGameConfig();
+        loadHighScore();
         }
 
         public void setupMainScreen(MainScreen mainScreen){
@@ -248,6 +250,14 @@ public class MainScreen extends JFrame {
         } catch (FileNotFoundException e) {
             common.getGameConfig().resetGameConfig();
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void loadHighScore() {
+        try {
+            common.setScoreList(common.getScoreList().getScoreList());
+        } catch (IOException e) {
+            System.out.println("High score file not found, attempting to create one...");
         }
     }
 

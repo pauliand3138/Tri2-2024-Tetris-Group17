@@ -1,5 +1,6 @@
 package view.panel;
 
+import model.GameConfig;
 import utilities.*;
 import utilities.LabelFactory;
 import view.MainScreen;
@@ -11,11 +12,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static view.MainScreen.common;
+
 public class TetrisHighScoreScreen extends JFrame {
 
     public TetrisHighScoreScreen() {
-        Font HEADER_FONT = new Font("Calibri", Font.BOLD, 16);
+        initContent();
+    }
 
+    public void initContent() {
         List<PlayerScore> playerScores = new ArrayList<>();
 
         setTitle("Tetris High Score Screen");
@@ -30,41 +35,60 @@ public class TetrisHighScoreScreen extends JFrame {
         JPanel titlePanel = new JPanel();
         titlePanel.add(titleLabel);
 
-        JPanel panel = new JPanel(new GridLayout(11, 2));
+        JPanel panel = new JPanel(new GridLayout(11, 4));
 
         LabelFactory subtitleFactory = new SubtitleLabelFactory();
+        JLabel rankLabel = subtitleFactory.createLabel("Rank");
         JLabel nameLabel = subtitleFactory.createLabel("Name");
         JLabel scoreLabel = subtitleFactory.createLabel("Score");
-//
-//        nameLabel.setFont(HEADER_FONT);
-//        scoreLabel.setFont(HEADER_FONT);
+        JLabel configLabel = subtitleFactory.createLabel("Config");
 
-//        centerJLabel(nameLabel);
-//        centerJLabel(scoreLabel);
-
+        panel.add(rankLabel);
         panel.add(nameLabel);
         panel.add(scoreLabel);
+        panel.add(configLabel);
 
-        for (int i = 1; i <= 10; i++) {
-            playerScores.add(new PlayerScore("Player " + i, (int) (Math.random() * 100)));
+        LabelFactory centerFactory = new CenterLabelFactory();
+        for (int i = 0; i < 10; i++) {
+            panel.add(centerFactory.createLabel(String.valueOf(i + 1)) );
+            if (i < common.scoreList.getScores().size()) {
+                panel.add(centerFactory.createLabel(common.scoreList.getScores().get(i).getName()));
+                panel.add(centerFactory.createLabel(common.scoreList.getScores().get(i).getScore() + ""));
+                GameConfig playerConfig = common.scoreList.getScores().get(i).getConfig();
+                int width = playerConfig.getFieldWidth();
+                int height = playerConfig.getFieldHeight();
+                int initLevel = playerConfig.getGameLevel();
+                int playerType = playerConfig.getPlayerOneType();
+                String playerTypeString = playerType == 0 ? "Human" : playerType == 1 ? "AI" : "External";
+                String gameMode = playerConfig.isExtendMode() ? "Double" : "Single";
+                String configString = width+"x"+height+"("+initLevel+") "+playerTypeString+" "+gameMode;
+                panel.add(centerFactory.createLabel(configString));
+            } else {
+                panel.add(centerFactory.createLabel("---"));
+                panel.add(centerFactory.createLabel("0"));
+                panel.add(centerFactory.createLabel("---"));
+            }
+
         }
 
-        playerScores.sort((a, b) -> Integer.compare(b.score(), a.score()));
+        JButton clearHighScoreButton = new JButton("Clear High Score");
+        clearHighScoreButton.setPreferredSize(new Dimension(360, 30));
+        clearHighScoreButton.setBackground(Color.WHITE);
 
-        List<JLabel> playerScoreLabels = new ArrayList<>();
-        LabelFactory centerLabelFactory = new CenterLabelFactory();
+        clearHighScoreButton.setBounds(0, 0, 80, 20);
+        clearHighScoreButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(null, "Are you sure to clear the high scores?", "Confirm", JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION) {
+                    common.scoreList.clearScores();
+                    TetrisHighScoreScreen newHighScoreScreen = new TetrisHighScoreScreen();
+                    newHighScoreScreen.setVisible(true);
+                    dispose();
+                }
 
-        for (PlayerScore playerScore : playerScores) {
-            JLabel name = centerLabelFactory.createLabel(playerScore.name());
-            JLabel score = centerLabelFactory.createLabel(String.valueOf(playerScore.score()));
-            playerScoreLabels.add(name);
-            playerScoreLabels.add(score);
-        }
-
-        for(JLabel label : playerScoreLabels) {
-            //centerJLabel(label);
-            panel.add(label);
-        }
+            }
+        });
 
         float titlePanelPct = 0.20F;
         float highScorePanelPct = 0.50F;
@@ -94,15 +118,15 @@ public class TetrisHighScoreScreen extends JFrame {
         });
         //creatorsPanel.add(backButton, BorderLayout.NORTH);
 
-        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 10)); // Moving up back button slightly
+        JPanel backButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 50, 10)); // Moving up back button slightly
         backButtonPanel.add(backButton);
+        backButtonPanel.add(clearHighScoreButton);
         creatorsPanel.add(backButtonPanel, BorderLayout.NORTH);
 
         add(titlePanel, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
         add(creatorsPanel, BorderLayout.SOUTH);
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(TetrisHighScoreScreen::run);
     }
