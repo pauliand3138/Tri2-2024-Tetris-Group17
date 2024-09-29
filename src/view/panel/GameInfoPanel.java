@@ -2,6 +2,7 @@ package view.panel;
 
 import model.GameInfo;
 import utilities.*;
+import Common.Common;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +22,8 @@ public class GameInfoPanel extends JPanel {
     public NextBlockPanel nextBlockPanel;
     private GameInfo gameInfo;
     private List<ScoreEntry> highScores;
+    private static final int ROW_COUNT = Common.getInstance().gameConfig.getFieldHeight();
+    private static final int COL_COUNT = Common.getInstance().gameConfig.getFieldWidth();
 
     public GameInfoPanel(GameInfo gameInfo) {
         this.gameInfo = gameInfo;
@@ -64,6 +67,10 @@ public class GameInfoPanel extends JPanel {
                 this.scoreLabel.setText("Score: " + gameInfo.getScore());
             }
         });
+    }
+
+    public GameInfo getGameInfo() {
+        return this.gameInfo;
     }
 
     public void clearLines() {

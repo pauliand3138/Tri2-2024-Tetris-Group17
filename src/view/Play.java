@@ -2,6 +2,7 @@ package view;
 
 import Common.Common;
 import controller.GameController;
+import model.GameInfo;
 import utilities.*;
 import view.panel.Board;
 import view.panel.GameInfoPanel;
@@ -117,8 +118,13 @@ public class Play extends JFrame {
             JPanel outerPane = new JPanel();
             outerPane.setLayout(new GridLayout(1, 2));
             JPanel innerPanel = new JPanel(new BorderLayout());
+
             int playerType = i == 0 ? common.gameConfig.getPlayerOneType() : common.gameConfig.getPlayerTwoType();
-            gameInfoPanel[i] = new GameInfoPanel(i + 1, playerType);
+            //gameInfoPanel[i] = new GameInfoPanel(i + 1, playerType);  issues with the constructor is it expects a GameInfo object.
+            GameInfo gameInfo = new GameInfo(i +1, playerType); // GameInfo object using playerNum and playerType
+
+            gameInfoPanel[i] = new GameInfoPanel(gameInfo);
+
             JPanel tetrisBoardPanel = new JPanel();
             tetrisBoardPanel.setLayout(null);
             board[i] = new Board(common.gameConfig.getFieldWidth() * 50, boardPanelHeight, i, gameInfoPanel[i]);

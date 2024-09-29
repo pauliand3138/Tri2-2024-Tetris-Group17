@@ -1,8 +1,6 @@
 package view.panel;
 
-import Common.Common;
 import controller.AIController;
-import controller.BoardEvaluator;
 import controller.ExternalPlayerController;
 import model.*;
 import view.Play;
@@ -38,7 +36,7 @@ public class Board extends JPanel implements ActionListener {
     public boolean isAI = false;
     public boolean isExternalPlayer = false;
     private long currentBlockSeed = common.getGameSeed();
-    private GameInfoPanel gameInfoPanel;
+    private final GameInfoPanel gameInfoPanel;
     private GameInfo gameInfo;
     public AIController aiController;
     public ExternalPlayerController externalPlayerController;
