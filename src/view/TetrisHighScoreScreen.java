@@ -1,9 +1,9 @@
-package view.panel;
+package view;
 
 import model.GameConfig;
 import utilities.*;
 import utilities.LabelFactory;
-import view.MainScreen;
+import view.panel.ScrollingTextPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -141,7 +141,7 @@ record PlayerScore(String name, int score) {
 
     @Override
     public String toString() {
-        return "view.panel.PlayerScore[" +
+        return "view.PlayerScore[" +
                 "name=" + name + ", " +
                 "score=" + score + ']';
     }

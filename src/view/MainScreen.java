@@ -1,15 +1,12 @@
 package view;
 
 import Common.Common;
-import view.panel.TetrisHighScoreScreen;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainScreen extends JFrame {
     public static Common common;
